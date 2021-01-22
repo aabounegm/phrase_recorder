@@ -119,7 +119,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
   Future<void> setNewRoutePath(PhraseRoutePath path) async {
     final id = path.id;
     if (id != null) {
-      _selectedPhrase = phrases[id];
+      _selectedPhrase = phrases.singleWhere((phrase) => phrase.id == id);
     } else {
       _selectedPhrase = null;
     }

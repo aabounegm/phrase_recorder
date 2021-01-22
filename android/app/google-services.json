@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "134532005913",
+    "project_id": "phrase-recorder",
+    "storage_bucket": "phrase-recorder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134532005913:android:ecc3780a794106fc762a88",
+        "android_client_info": {
+          "package_name": "com.example.phrase_recorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "134532005913-t5o21aoaobavqqijnlvuhsom93sk2aod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.phrase_recorder",
+            "certificate_hash": "2321c05ef23237d7f4e0a5dd94b83388e8ccce0d"
+          }
+        },
+        {
+          "client_id": "134532005913-hoejcaou7j4oeauk44fduoi6hoj6gm39.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtXAOCop4d69YSG-SUaXCKtpm65d0HjNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "134532005913-hoejcaou7j4oeauk44fduoi6hoj6gm39.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

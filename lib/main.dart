@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phrase_recorder/router.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(PhrasesApp());
 }
 

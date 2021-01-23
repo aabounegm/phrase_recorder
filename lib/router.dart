@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phrase_recorder/models/Phrase.dart';
 import 'package:phrase_recorder/screens/PhraseDetails.dart';
 import 'package:phrase_recorder/screens/PhraseList.dart';
 
 class PhraseRoutePath {
-  final int? id;
+  final String? id;
 
   const PhraseRoutePath.home() : id = null;
   const PhraseRoutePath.details(this.id);
@@ -44,9 +46,7 @@ class PhraseRouteInformationParser
     // Handle '/phrase/:id'
     if (uri.pathSegments.length == 2) {
       if (uri.pathSegments[0] != 'phrase') return PhraseRoutePath.home();
-      final remaining = uri.pathSegments[1];
-      final id = int.tryParse(remaining);
-      if (id == null) return PhraseRoutePath.home();
+      final id = uri.pathSegments[1];
       return PhraseRoutePath.details(id);
     }
 
@@ -70,11 +70,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
 
   Phrase? _selectedPhrase;
 
-  List<Phrase> phrases = [
-    Phrase(1, 'Robert A. Heinlein'),
-    Phrase(2, 'Isaac Asimov'),
-    Phrase(3, 'Ray Bradbury'),
-  ];
+  Iterable<Phrase> phrases = [];
 
   PhraseRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
@@ -88,31 +84,64 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
   @override
   Widget build(BuildContext context) {
     final phrase = _selectedPhrase;
+    final db = FirebaseFirestore.instance;
 
-    return Navigator(
-      key: navigatorKey,
-      pages: [
-        MaterialPage(
-          key: ValueKey('PhrasesListPage'),
-          child: PhraseListScreen(
-            phrases: phrases,
-            onTapped: _handlePhraseTapped,
-          ),
-        ),
-        if (phrase != null) PhraseDetailsPage(phrase: phrase)
-      ],
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
+    return FutureBuilder(
+        future: Firebase.initializeApp(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                  child: Text('An error occurred initializing Firebase')),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Navigator(
+              key: navigatorKey,
+              pages: [
+                MaterialPage(
+                  key: ValueKey('PhrasesListPage'),
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: db.collection('phrases').snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text(
+                              'Something went wrong: ${snapshot.error}');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text("Loading data...");
+                        }
 
-        // Update the list of pages by setting _selectedPhrase to null
-        _selectedPhrase = null;
-        notifyListeners();
+                        final data = snapshot.data;
+                        phrases = data == null
+                            ? []
+                            : data.docs.map((e) =>
+                                Phrase.fromMap({...e.data(), 'id': e.id}));
 
-        return true;
-      },
-    );
+                        return PhraseListScreen(
+                          phrases: phrases,
+                          onTapped: _handlePhraseTapped,
+                        );
+                      }),
+                ),
+                if (phrase != null) PhraseDetailsPage(phrase: phrase),
+              ],
+              onPopPage: (route, result) {
+                if (!route.didPop(result)) {
+                  return false;
+                }
+
+                // Update the list of pages by setting _selectedPhrase to null
+                _selectedPhrase = null;
+                notifyListeners();
+
+                return true;
+              },
+            );
+          }
+          return Scaffold(body: Center(child: Text('Initializing...')));
+        });
   }
 
   @override

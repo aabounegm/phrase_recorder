@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phrase_recorder/models/Phrase.dart';
 
 class PhraseListScreen extends StatelessWidget {
-  final List<Phrase> phrases;
+  final Iterable<Phrase> phrases;
   final ValueChanged<Phrase> onTapped;
 
   PhraseListScreen({required this.phrases, required this.onTapped});

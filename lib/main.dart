@@ -5,12 +5,7 @@ void main() {
   runApp(PhrasesApp());
 }
 
-class PhrasesApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _PhrasesAppState();
-}
-
-class _PhrasesAppState extends State<PhrasesApp> {
+class PhrasesApp extends StatelessWidget {
   final _routerDelegate = PhraseRouterDelegate();
   final _routeInformationParser = PhraseRouteInformationParser();
 

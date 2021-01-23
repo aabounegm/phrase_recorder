@@ -14,16 +14,18 @@ class PhraseRoutePath {
 
 class PhraseDetailsPage extends Page {
   final Phrase phrase;
+  final VoidCallback onSave;
 
   PhraseDetailsPage({
     required this.phrase,
+    required this.onSave,
   }) : super(key: ValueKey(phrase));
 
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
       builder: (BuildContext context) {
-        return PhraseDetailsScreen(phrase: phrase);
+        return PhraseDetailsScreen(phrase: phrase, onSave: onSave);
       },
     );
   }
@@ -125,7 +127,8 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                         );
                       }),
                 ),
-                if (phrase != null) PhraseDetailsPage(phrase: phrase),
+                if (phrase != null)
+                  PhraseDetailsPage(phrase: phrase, onSave: _handleSave),
               ],
               onPopPage: (route, result) {
                 if (!route.didPop(result)) {
@@ -147,7 +150,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
   @override
   Future<void> setNewRoutePath(PhraseRoutePath path) async {
     final id = path.id;
-    if (id != null) {
+    if (id != null && phrases.length > 0) {
       _selectedPhrase = phrases.singleWhere((phrase) => phrase.id == id);
     } else {
       _selectedPhrase = null;
@@ -156,6 +159,11 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
 
   void _handlePhraseTapped(Phrase phrase) {
     _selectedPhrase = phrase;
+    notifyListeners();
+  }
+
+  void _handleSave() {
+    _selectedPhrase = null;
     notifyListeners();
   }
 }

@@ -89,7 +89,6 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
   @override
   Widget build(BuildContext context) {
     final phrase = _selectedPhrase;
-    final db = FirebaseFirestore.instance;
 
     return FutureBuilder(
         future: Firebase.initializeApp(),
@@ -101,6 +100,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
             );
           }
           if (snapshot.connectionState == ConnectionState.done) {
+            final db = FirebaseFirestore.instance;
             return Navigator(
               key: navigatorKey,
               pages: [

@@ -12,8 +12,8 @@ class PhraseDetailsScreen extends StatefulWidget {
 }
 
 class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
-  var recording = false;
-  var finishedRecording = false;
+  var _isRecording = false;
+  var _finishedRecording = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,30 +34,30 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
               child: Container(
                 padding: EdgeInsets.all(36),
                 decoration: BoxDecoration(
-                  color: recording
+                  color: _isRecording
                       ? Colors.red[400]
                       : Theme.of(context).buttonColor,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  recording ? Icons.stop : Icons.mic,
+                  _isRecording ? Icons.stop : Icons.mic,
                   size: 72,
                 ),
               ),
               onTapDown: (_details) {
                 setState(() {
-                  recording = true;
-                  finishedRecording = false;
+                  _isRecording = true;
+                  _finishedRecording = false;
                 });
               },
               onTapUp: (_details) {
                 setState(() {
-                  recording = false;
-                  finishedRecording = true;
+                  _isRecording = false;
+                  _finishedRecording = true;
                 });
               },
             ),
-            if (finishedRecording)
+            if (_finishedRecording)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -65,7 +65,7 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
                       setState(() {
-                        finishedRecording = false;
+                        _finishedRecording = false;
                       });
                     },
                     tooltip: 'Discard recording',

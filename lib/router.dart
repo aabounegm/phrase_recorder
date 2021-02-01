@@ -21,6 +21,7 @@ class PhraseDetailsPage extends Page {
     required this.onSave,
   }) : super(key: ValueKey(phrase));
 
+  @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
@@ -41,7 +42,7 @@ class PhraseRouteInformationParser
 
     final uri = Uri.parse(location);
     // Handle '/'
-    if (uri.pathSegments.length == 0) {
+    if (uri.pathSegments.isEmpty) {
       return PhraseRoutePath.home();
     }
 
@@ -68,6 +69,7 @@ class PhraseRouteInformationParser
 
 class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<PhraseRoutePath> {
+  @override
   final GlobalKey<NavigatorState> navigatorKey;
 
   Phrase? _selectedPhrase;
@@ -76,6 +78,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
 
   PhraseRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
+  @override
   PhraseRoutePath get currentConfiguration {
     final phrase = _selectedPhrase;
     return phrase == null
@@ -112,7 +115,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                         }
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Text("Loading data...");
+                          return Text('Loading data...');
                         }
 
                         final data = snapshot.data;
@@ -150,7 +153,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
   @override
   Future<void> setNewRoutePath(PhraseRoutePath path) async {
     final id = path.id;
-    if (id != null && phrases.length > 0) {
+    if (id != null && phrases.isNotEmpty) {
       _selectedPhrase = phrases.singleWhere((phrase) => phrase.id == id);
     } else {
       _selectedPhrase = null;

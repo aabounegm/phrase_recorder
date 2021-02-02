@@ -148,23 +148,27 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
+                    iconSize: 40,
                     onPressed: deleteRecording,
                     tooltip: 'Discard recording',
                   ),
                   if (_isPlaying)
                     IconButton(
                       icon: Icon(Icons.stop),
+                      iconSize: 40,
                       onPressed: stopPlaying,
                       tooltip: 'Stop playback',
                     )
                   else
                     IconButton(
                       icon: Icon(Icons.play_arrow),
+                      iconSize: 40,
                       onPressed: startPlaying,
                       tooltip: 'Replay recording',
                     ),
                   IconButton(
                     icon: Icon(Icons.save),
+                    iconSize: 40,
                     onPressed: widget.onSave,
                     tooltip: 'Save and continue',
                   ),

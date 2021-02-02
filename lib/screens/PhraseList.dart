@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/models/Phrase.dart';
 import 'package:flutter_archive/flutter_archive.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class PhraseListScreen extends StatelessWidget {
   final Iterable<Phrase> phrases;
@@ -54,6 +55,7 @@ class UploadButton extends StatefulWidget {
 
 class _UploadButtonState extends State<UploadButton> {
   var _loading = false;
+  final storage = FirebaseStorage.instance;
 
   Future<void> upload() async {
     setState(() {
@@ -63,6 +65,11 @@ class _UploadButtonState extends State<UploadButton> {
     final zipFile = File('${widget.directory.path}/all.zip');
     await ZipFile.createFromFiles(
         sourceDir: widget.directory, files: files, zipFile: zipFile);
+    await storage.ref('uploads/recordings.zip').putFile(zipFile);
+    await zipFile.delete();
+    await Future.wait(files.map((file) => file.delete()));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Content uploaded successfully!')));
     setState(() {
       _loading = false;
     });

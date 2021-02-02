@@ -18,23 +18,26 @@ class PhraseListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var allDone = phrases.every((p) => p.exists);
+    var allDone = phrases.isNotEmpty && phrases.every((p) => p.exists);
     return Scaffold(
       appBar: AppBar(
         title: Text('Phrase list'),
       ),
-      body: ListView(
-        children: [
-          for (final phrase in phrases)
-            ListTile(
-              title: Text(phrase.text),
-              subtitle: Text(phrase.id.toString()),
-              trailing:
-                  phrase.exists ? Icon(Icons.check, color: Colors.green) : null,
-              onTap: () => goToPhrase(phrase),
-            )
-        ],
-      ),
+      body: phrases.isEmpty
+          ? Center(child: Text('No phrases yet'))
+          : ListView(
+              children: [
+                for (final phrase in phrases)
+                  ListTile(
+                    title: Text(phrase.text),
+                    subtitle: Text(phrase.id.toString()),
+                    trailing: phrase.exists
+                        ? Icon(Icons.check, color: Colors.green)
+                        : null,
+                    onTap: () => goToPhrase(phrase),
+                  )
+              ],
+            ),
       floatingActionButton:
           allDone ? UploadButton(phrases: phrases, directory: directory) : null,
     );

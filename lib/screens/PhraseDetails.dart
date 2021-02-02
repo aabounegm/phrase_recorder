@@ -36,11 +36,7 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
         _playerIsInited = true;
       });
     });
-    openTheRecorder().then((_) {
-      setState(() {
-        _recorderIsInited = true;
-      });
-    });
+    openTheRecorder();
     super.initState();
   }
 
@@ -61,12 +57,20 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
     // var dir = await getApplicationDocumentsDirectory();
     var dir = await getExternalStorageDirectory();
     _path = '${dir.path}/recordings/${widget.phrase.text}.aac';
-    var outputFile = await File(_path).create(recursive: true);
+    var outputFile = File(_path);
     if (outputFile.existsSync()) {
+      setState(() {
+        _playbackReady = true;
+      });
+    } else {
+      // To create the directories
+      await outputFile.create(recursive: true);
       await outputFile.delete();
     }
     await _recorder.openAudioSession();
-    _recorderIsInited = true;
+    setState(() {
+      _recorderIsInited = true;
+    });
   }
 
   Future<void> startRecording() async {

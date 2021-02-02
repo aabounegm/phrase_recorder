@@ -123,11 +123,12 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                         }
 
                         final data = snapshot.data;
+                        var dir = Directory('');
                         Future<void> getPhrases() async {
                           // TODO switch to ApplicationDocuments for iOS compatibility
                           // var appDir = await getApplicationDocumentsDirectory();
                           var appDir = await getExternalStorageDirectory();
-                          var dir = Directory('${appDir.path}/recordings/');
+                          dir = Directory('${appDir.path}/recordings');
                           await dir.create(recursive: true);
                           if (data == null) return;
                           var promises = data.docs.map((e) async {
@@ -150,6 +151,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                             return PhraseListScreen(
                               phrases: phrases,
                               goToPhrase: _handlePhraseTapped,
+                              directory: dir,
                             );
                           },
                         );

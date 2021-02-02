@@ -19,6 +19,8 @@ class PhraseListScreen extends StatelessWidget {
             ListTile(
               title: Text(phrase.text),
               subtitle: Text(phrase.id.toString()),
+              trailing:
+                  phrase.exists ? Icon(Icons.check, color: Colors.green) : null,
               onTap: () => goToPhrase(phrase),
             )
         ],

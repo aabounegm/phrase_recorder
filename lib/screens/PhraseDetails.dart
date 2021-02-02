@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
@@ -25,7 +24,6 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
   var _playbackReady = false;
   final _player = FlutterSoundPlayer();
   final _recorder = FlutterSoundRecorder();
-  late String _path;
 
   @override
   void initState() {
@@ -37,6 +35,9 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
       });
     });
     openTheRecorder();
+    if (widget.phrase.exists) {
+      _playbackReady = true;
+    }
     super.initState();
   }
 
@@ -53,20 +54,6 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
 
   Future<void> openTheRecorder() async {
     await Permission.microphone.request();
-    // TODO switch to ApplicationDocuments for iOS compatibility
-    // var dir = await getApplicationDocumentsDirectory();
-    var dir = await getExternalStorageDirectory();
-    _path = '${dir.path}/recordings/${widget.phrase.text}.aac';
-    var outputFile = File(_path);
-    if (outputFile.existsSync()) {
-      setState(() {
-        _playbackReady = true;
-      });
-    } else {
-      // To create the directories
-      await outputFile.create(recursive: true);
-      await outputFile.delete();
-    }
     await _recorder.openAudioSession();
     setState(() {
       _recorderIsInited = true;
@@ -74,7 +61,7 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
   }
 
   Future<void> startRecording() async {
-    await _recorder.startRecorder(toFile: _path);
+    await _recorder.startRecorder(toFile: widget.phrase.path);
     setState(() {
       _isRecording = true;
       _playbackReady = false;
@@ -91,7 +78,7 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
   }
 
   Future<void> deleteRecording() async {
-    await File(_path).delete();
+    await File(widget.phrase.path).delete();
     setState(() {
       _playbackReady = false;
     });
@@ -103,7 +90,7 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
       _isPlaying = true;
     });
     await _player.startPlayer(
-        fromURI: _path,
+        fromURI: widget.phrase.path,
         whenFinished: () {
           setState(() {
             _isPlaying = false;

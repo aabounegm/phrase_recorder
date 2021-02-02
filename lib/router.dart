@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:phrase_recorder/models/Phrase.dart';
 import 'package:phrase_recorder/screens/PhraseDetails.dart';
 import 'package:phrase_recorder/screens/PhraseList.dart';
@@ -119,14 +123,35 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                         }
 
                         final data = snapshot.data;
-                        phrases = data == null
-                            ? []
-                            : data.docs.map((e) =>
-                                Phrase.fromMap({...e.data(), 'id': e.id}));
+                        Future<void> getPhrases() async {
+                          // TODO switch to ApplicationDocuments for iOS compatibility
+                          // var appDir = await getApplicationDocumentsDirectory();
+                          var appDir = await getExternalStorageDirectory();
+                          var dir = Directory('${appDir.path}/recordings/');
+                          await dir.create(recursive: true);
+                          if (data == null) return;
+                          var promises = data.docs.map((e) async {
+                            var json = e.data();
+                            var path = '${dir.path}/${json["text"]}.aac';
+                            var exists = await File(path).exists();
+                            return Phrase(
+                              e.id,
+                              json['text'],
+                              exists: exists,
+                              path: path,
+                            );
+                          });
+                          phrases = await Future.wait(promises);
+                        }
 
-                        return PhraseListScreen(
-                          phrases: phrases,
-                          onTapped: _handlePhraseTapped,
+                        return FutureBuilder(
+                          future: getPhrases(),
+                          builder: (_ctx, _snap) {
+                            return PhraseListScreen(
+                              phrases: phrases,
+                              onTapped: _handlePhraseTapped,
+                            );
+                          },
                         );
                       }),
                 ),

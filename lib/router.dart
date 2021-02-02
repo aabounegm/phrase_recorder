@@ -115,7 +115,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                         }
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Text('Loading data...');
+                          return Scaffold(body: Text('Loading data...'));
                         }
 
                         final data = snapshot.data;

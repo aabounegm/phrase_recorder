@@ -149,7 +149,7 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                           builder: (_ctx, _snap) {
                             return PhraseListScreen(
                               phrases: phrases,
-                              onTapped: _handlePhraseTapped,
+                              goToPhrase: _handlePhraseTapped,
                             );
                           },
                         );

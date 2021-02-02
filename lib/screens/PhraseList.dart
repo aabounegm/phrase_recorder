@@ -3,9 +3,9 @@ import 'package:phrase_recorder/models/Phrase.dart';
 
 class PhraseListScreen extends StatelessWidget {
   final Iterable<Phrase> phrases;
-  final ValueChanged<Phrase> onTapped;
+  final ValueChanged<Phrase> goToPhrase;
 
-  PhraseListScreen({required this.phrases, required this.onTapped});
+  PhraseListScreen({required this.phrases, required this.goToPhrase});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class PhraseListScreen extends StatelessWidget {
             ListTile(
               title: Text(phrase.text),
               subtitle: Text(phrase.id.toString()),
-              onTap: () => onTapped(phrase),
+              onTap: () => goToPhrase(phrase),
             )
         ],
       ),

@@ -173,7 +173,9 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
                     tooltip: 'Save and continue',
                   ),
                 ],
-              ),
+              )
+            else
+              Container(height: 56)
           ],
         ),
       ),

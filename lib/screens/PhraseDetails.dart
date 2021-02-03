@@ -61,7 +61,7 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
   }
 
   Future<void> startRecording() async {
-    await _recorder.startRecorder(toFile: widget.phrase.path);
+    await _recorder.startRecorder(toFile: widget.phrase.id);
     setState(() {
       _isRecording = true;
       _playbackReady = false;

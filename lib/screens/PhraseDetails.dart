@@ -118,7 +118,7 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
           children: [
             Text(
               widget.phrase.text,
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 60),
               textAlign: TextAlign.center,
             ),
             GestureDetector(

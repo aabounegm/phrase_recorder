@@ -129,12 +129,12 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                           dir = Directory('${appDir.path}/recordings');
                           await dir.create(recursive: true);
                           if (data == null) return;
-                          var promises = data.docs.map((e) async {
-                            var json = e.data();
-                            var path = '${dir.path}/${json["text"]}.aac';
+                          var promises = data.docs.map((doc) async {
+                            var json = doc.data();
+                            var path = '${dir.path}/${doc.id}.aac';
                             var exists = await File(path).exists();
                             return Phrase(
-                              e.id,
+                              doc.id,
                               json['text'],
                               exists: exists,
                               path: path,

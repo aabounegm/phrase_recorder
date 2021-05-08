@@ -122,6 +122,10 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
               textAlign: TextAlign.center,
             ),
             GestureDetector(
+              onTapDown: _recorderIsInited ? (_) => startRecording() : null,
+              onVerticalDragEnd:
+                  _recorderIsInited ? (_) => stopRecording() : null,
+              onTapUp: _recorderIsInited ? (_) => stopRecording() : null,
               child: Container(
                 padding: EdgeInsets.all(36),
                 decoration: BoxDecoration(
@@ -137,10 +141,6 @@ class _PhraseDetailsScreenState extends State<PhraseDetailsScreen> {
                   size: 72,
                 ),
               ),
-              onTapDown: _recorderIsInited ? (_) => startRecording() : null,
-              onVerticalDragEnd:
-                  _recorderIsInited ? (_) => stopRecording() : null,
-              onTapUp: _recorderIsInited ? (_) => stopRecording() : null,
             ),
             if (_playbackReady)
               Row(

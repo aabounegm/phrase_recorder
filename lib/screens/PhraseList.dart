@@ -81,11 +81,11 @@ class _UploadButtonState extends State<UploadButton> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      onPressed: _loading ? null : upload,
+      tooltip: 'Upload',
       child: _loading
           ? CircularProgressIndicator(backgroundColor: Colors.white)
           : Icon(Icons.cloud_upload),
-      onPressed: _loading ? null : upload,
-      tooltip: 'Upload',
     );
   }
 }

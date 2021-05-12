@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:phrase_recorder/models/Phrase.dart';
-import 'package:phrase_recorder/screens/PhraseDetails.dart';
 import 'package:phrase_recorder/screens/PhraseList.dart';
 
 class PhraseRoutePath {
@@ -14,26 +13,6 @@ class PhraseRoutePath {
 
   const PhraseRoutePath.home() : id = null;
   const PhraseRoutePath.details(this.id);
-}
-
-class PhraseDetailsPage extends Page {
-  final Phrase phrase;
-  final VoidCallback onSave;
-
-  PhraseDetailsPage({
-    required this.phrase,
-    required this.onSave,
-  }) : super(key: ValueKey(phrase));
-
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-      settings: this,
-      builder: (BuildContext context) {
-        return PhraseDetailsScreen(phrase: phrase, onSave: onSave);
-      },
-    );
-  }
 }
 
 class PhraseRouteInformationParser
@@ -147,16 +126,19 @@ class PhraseRouterDelegate extends RouterDelegate<PhraseRoutePath>
                           future: getPhrases(),
                           builder: (_ctx, _snap) {
                             return PhraseListScreen(
-                              phrases: phrases,
-                              goToPhrase: _handlePhraseTapped,
+                              [
+                                Phrase('1', 'Phrase #1',
+                                    path: 'phrase_1', exists: true),
+                                Phrase('2', 'Phrase #2',
+                                    path: 'phrase_2', exists: true),
+                                Phrase('3', 'Phrase #3', path: 'phrase_3')
+                              ],
                               directory: dir,
                             );
                           },
                         );
                       }),
                 ),
-                if (phrase != null)
-                  PhraseDetailsPage(phrase: phrase, onSave: _handleSave),
               ],
               onPopPage: (route, result) {
                 if (!route.didPop(result)) {

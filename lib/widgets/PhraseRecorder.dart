@@ -8,9 +8,9 @@ import 'package:phrase_recorder/models/Phrase.dart';
 
 class PhraseRecorder extends StatefulWidget {
   final Phrase phrase;
-  final Phrase? phrase_previous;
+  final void Function()? moveNext;
 
-  PhraseRecorder(this.phrase, {this.phrase_previous});
+  PhraseRecorder(this.phrase, {this.moveNext});
 
   @override
   _PhraseRecorderState createState() => _PhraseRecorderState();
@@ -60,9 +60,8 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     });
   }
 
-  Future<void> startRecording(Phrase? phrase) async {
-    if (phrase == null) return;
-    await _recorder.startRecorder(toFile: phrase.id);
+  Future<void> startRecording() async {
+    await _recorder.startRecorder(toFile: widget.phrase.id);
     setState(() {
       _isRecording = true;
       _playbackReady = false;
@@ -85,19 +84,19 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     });
   }
 
-  Future<void> startPlaying(Phrase? phrase) async {
-    if (phrase == null) return;
+  Future<void> startPlaying() async {
     assert(_playerIsInited);
     setState(() {
       _isPlaying = true;
     });
     await _player.startPlayer(
-        fromURI: phrase.path,
-        whenFinished: () {
-          setState(() {
-            _isPlaying = false;
-          });
+      fromURI: widget.phrase.path,
+      whenFinished: () {
+        setState(() {
+          _isPlaying = false;
         });
+      },
+    );
   }
 
   Future<void> stopPlaying({bool disposing = false}) async {
@@ -110,52 +109,52 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 4,
+          ),
+        ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          GestureDetector(
-            onTapDown: widget.phrase_previous != null && _recorderIsInited
-                ? (_) => startRecording(widget.phrase_previous)
-                : null,
-            onVerticalDragEnd:
-                _recorderIsInited ? (_) => stopRecording() : null,
-            onTapUp: _recorderIsInited ? (_) => stopRecording() : null,
-            child: IconButton(
-              icon: Icon(_isRecording ? Icons.stop : Icons.mic),
-              iconSize: 42,
-              onPressed: null,
-            ),
+          IconButton(
+            icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
+            iconSize: 42,
+            color: Colors.black,
+            onPressed: _isPlaying ? stopPlaying : startPlaying,
+            tooltip: _isPlaying ? 'Stop playback' : 'Replay recording',
           ),
-          if (_isPlaying)
-            IconButton(
-              icon: Icon(Icons.stop),
-              iconSize: 42,
-              onPressed: widget.phrase_previous == null ? null : stopPlaying,
-              tooltip: 'Stop playback',
-            )
-          else
-            IconButton(
-              icon: Icon(Icons.play_arrow),
-              iconSize: 42,
-              onPressed: widget.phrase_previous == null
-                  ? null
-                  : () => startPlaying(widget.phrase_previous),
-              tooltip: 'Replay recording',
+          if (_recorderIsInited)
+            GestureDetector(
+              onTapDown: (_) => startRecording(),
+              onVerticalDragEnd: (_) => stopRecording(),
+              onTapUp: (_) => stopRecording(),
+              child: IconButton(
+                icon: Icon(Icons.mic),
+                color: _isRecording ? Colors.blue : Colors.black,
+                iconSize: 42,
+                onPressed: () {},
+              ),
             ),
-          GestureDetector(
-            onTapDown:
-                _recorderIsInited ? (_) => startRecording(widget.phrase) : null,
-            onVerticalDragEnd:
-                _recorderIsInited ? (_) => stopRecording() : null,
-            onTapUp: _recorderIsInited ? (_) => stopRecording() : null,
-            child: IconButton(
-              icon: Icon(_isRecording ? Icons.stop : Icons.mic),
+          if (widget.moveNext != null)
+            IconButton(
+              icon: Icon(Icons.navigate_next),
+              color: Colors.black,
               iconSize: 42,
-              onPressed: null,
+              onPressed: _isPlaying ? stopPlaying : startPlaying,
+              tooltip: _isPlaying ? 'Stop playback' : 'Replay recording',
             ),
-          ),
         ],
       ),
     );

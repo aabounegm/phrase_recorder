@@ -19,14 +19,14 @@ class PhraseListScreen extends StatefulWidget {
 }
 
 class _PhraseListScreenState extends State<PhraseListScreen> {
-  Phrase? selectedPhrase;
+  Phrase? phrase;
   bool autoReplay = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.phrases.isNotEmpty) {
-      setState(() => selectedPhrase = widget.phrases[0]);
+      setState(() => phrase = widget.phrases[0]);
     }
   }
 
@@ -57,22 +57,32 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                 Expanded(
                   child: ListView(
                     children: [
-                      for (final phrase in phrases)
+                      for (final p in phrases)
                         ListTile(
-                          title: Text(phrase.text),
-                          subtitle: Text(phrase.id.toString()),
-                          trailing: phrase.exists
+                          title: Text(p.text),
+                          subtitle: Text(p.id.toString()),
+                          trailing: p.exists
                               ? Icon(Icons.check, color: Colors.green)
                               : null,
-                          onTap: () => setState(() => selectedPhrase = phrase),
-                          selected: selectedPhrase == phrase,
+                          onTap: () => setState(() => phrase = p),
+                          selected: phrase == p,
                         )
                     ],
                   ),
                 ),
-                selectedPhrase == null
+                phrase == null
                     ? Text('Select phrase above')
-                    : PhraseRecorder(selectedPhrase as Phrase)
+                    : PhraseRecorder(
+                        phrase as Phrase,
+                        moveNext: phrase == null
+                            ? null
+                            : () => setState(
+                                  () {
+                                    final i = phrases.indexOf(phrase!);
+                                    phrase = phrases[(i + 1) % phrases.length];
+                                  },
+                                ),
+                      )
               ],
             ),
     );

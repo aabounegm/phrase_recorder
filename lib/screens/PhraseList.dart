@@ -19,20 +19,17 @@ class PhraseListScreen extends StatefulWidget {
 }
 
 class _PhraseListScreenState extends State<PhraseListScreen> {
-  Phrase? phrase;
+  late Phrase? phrase;
   bool autoReplay = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.phrases.isNotEmpty) {
-      setState(() => phrase = widget.phrases[0]);
-    }
+    phrase = widget.phrases[0];
   }
 
   @override
   Widget build(BuildContext context) {
-    final phrases = widget.phrases;
     return Scaffold(
       appBar: AppBar(
         title: Text('Phrase list'),
@@ -45,19 +42,19 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
             onPressed: () => setState(() => autoReplay = !autoReplay),
           ),
           UploadButton(
-            phrases: phrases.where((p) => p.exists),
+            phrases: widget.phrases.where((p) => p.exists),
             directory: widget.directory,
           )
         ],
       ),
-      body: phrases.isEmpty
+      body: widget.phrases.isEmpty
           ? Center(child: Text('No phrases yet'))
           : Column(
               children: [
                 Expanded(
                   child: ListView(
                     children: [
-                      for (final p in phrases)
+                      for (final p in widget.phrases)
                         ListTile(
                           title: Text(p.text),
                           subtitle: Text(p.id.toString()),
@@ -78,8 +75,9 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                             ? null
                             : () => setState(
                                   () {
-                                    final i = phrases.indexOf(phrase!);
-                                    phrase = phrases[(i + 1) % phrases.length];
+                                    final i = widget.phrases.indexOf(phrase!);
+                                    final l = widget.phrases.length;
+                                    phrase = widget.phrases[(i + 1) % l];
                                   },
                                 ),
                       )

@@ -109,54 +109,53 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
-            iconSize: 42,
-            color: Colors.black,
-            onPressed: _isPlaying ? stopPlaying : startPlaying,
-            tooltip: _isPlaying ? 'Stop playback' : 'Replay recording',
-          ),
-          if (_recorderIsInited)
-            GestureDetector(
-              onTapDown: (_) => startRecording(),
-              onVerticalDragEnd: (_) => stopRecording(),
-              onTapUp: (_) => stopRecording(),
-              child: IconButton(
-                icon: Icon(Icons.mic),
-                color: _isRecording ? Colors.blue : Colors.black,
-                iconSize: 42,
-                onPressed: () {},
-              ),
+    return Column(
+      children: [
+        Divider(height: 0),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            widget.phrase.text,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-          if (widget.moveNext != null)
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
             IconButton(
-              icon: Icon(Icons.navigate_next),
-              color: Colors.black,
+              icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
               iconSize: 42,
+              color: Colors.black,
               onPressed: _isPlaying ? stopPlaying : startPlaying,
               tooltip: _isPlaying ? 'Stop playback' : 'Replay recording',
             ),
-        ],
-      ),
+            if (_recorderIsInited)
+              GestureDetector(
+                onTapDown: (_) => startRecording(),
+                onVerticalDragEnd: (_) => stopRecording(),
+                onTapUp: (_) => stopRecording(),
+                child: IconButton(
+                  icon: Icon(Icons.mic),
+                  color: _isRecording ? Colors.blue : Colors.black,
+                  iconSize: 42,
+                  onPressed: () {},
+                ),
+              ),
+            if (widget.moveNext != null)
+              IconButton(
+                icon: Icon(Icons.navigate_next),
+                color: Colors.black,
+                iconSize: 42,
+                onPressed: widget.moveNext,
+                tooltip: 'Next phrase',
+              ),
+          ],
+        ),
+        SizedBox(height: 16),
+      ],
     );
   }
 }

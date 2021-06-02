@@ -20,7 +20,7 @@ class PhraseListScreen extends StatefulWidget {
 
 class _PhraseListScreenState extends State<PhraseListScreen> {
   late Phrase? phrase;
-  bool autoReplay = false;
+  bool autoReplay = true;
 
   @override
   void initState() {
@@ -44,7 +44,8 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
           UploadButton(
             phrases: widget.phrases.where((p) => p.exists),
             directory: widget.directory,
-          )
+          ),
+          SizedBox(width: 8),
         ],
       ),
       body: widget.phrases.isEmpty
@@ -71,6 +72,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                     ? Text('Select phrase above')
                     : PhraseRecorder(
                         phrase as Phrase,
+                        autoReplay: autoReplay,
                         moveNext: phrase == null
                             ? null
                             : () => setState(

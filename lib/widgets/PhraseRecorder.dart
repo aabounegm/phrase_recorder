@@ -9,8 +9,13 @@ import 'package:phrase_recorder/models/Phrase.dart';
 class PhraseRecorder extends StatefulWidget {
   final Phrase phrase;
   final void Function()? moveNext;
+  final bool autoReplay;
 
-  PhraseRecorder(this.phrase, {this.moveNext});
+  PhraseRecorder(
+    this.phrase, {
+    this.moveNext,
+    this.autoReplay = false,
+  });
 
   @override
   _PhraseRecorderState createState() => _PhraseRecorderState();

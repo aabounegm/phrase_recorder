@@ -46,7 +46,7 @@ class _UploadButtonState extends State<UploadButton> {
         ? Container(
             width: 24,
             height: 24,
-            child: CircularProgressIndicator(backgroundColor: Colors.white),
+            child: CircularProgressIndicator(),
           )
         : IconButton(
             icon: Icon(Icons.cloud_upload),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/router.dart';
+import 'package:phrase_recorder/firebase_builder.dart';
+import 'package:phrase_recorder/screens/PhraseList.dart';
+import 'package:phrase_recorder/store.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -7,15 +9,31 @@ void main() {
 }
 
 class PhrasesApp extends StatelessWidget {
-  final _routerDelegate = PhraseRouterDelegate();
-  final _routeInformationParser = PhraseRouteInformationParser();
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'Phrases App',
-      routerDelegate: _routerDelegate,
-      routeInformationParser: _routeInformationParser,
+      theme: ThemeData(
+        primaryColor: Colors.white,
+        accentColor: Colors.grey,
+        cardTheme: CardTheme(
+          clipBehavior: Clip.antiAlias,
+        ),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        accentColor: Colors.grey,
+        cardTheme: CardTheme(
+          clipBehavior: Clip.antiAlias,
+        ),
+      ),
+      home: FirebaseBuilder(
+        future: loadPhrases(),
+        builder: () => PhraseListScreen(
+          phrases,
+          directory: recsDir,
+        ),
+      ),
     );
   }
 }

@@ -1,14 +1,23 @@
 class Phrase {
   final String id;
   final String text;
-  final bool exists;
-  final String path;
+  String path = '';
+  bool exists = false;
 
-  const Phrase(this.id, this.text, {required this.path, this.exists = false});
-  factory Phrase.fromMap(Map<String, dynamic> json) => Phrase(
-        json['id'],
-        json['text'],
-        exists: json['exists'] ?? false,
-        path: json['path'],
-      );
+  Phrase({
+    required this.id,
+    required this.text,
+  });
+
+  Phrase.fromJson(Map<String, dynamic> json, String id)
+      : this(
+          id: id,
+          text: json['text'],
+        );
+
+  Map<String, dynamic> toJson() {
+    final data = {};
+    data['text'] = text;
+    return data as Map<String, dynamic>;
+  }
 }

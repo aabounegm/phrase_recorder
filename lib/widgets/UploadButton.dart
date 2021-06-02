@@ -49,7 +49,7 @@ class _UploadButtonState extends State<UploadButton> {
             child: CircularProgressIndicator(),
           )
         : IconButton(
-            icon: Icon(Icons.cloud_upload),
+            icon: Icon(Icons.cloud_upload_outlined),
             onPressed: widget.phrases.isEmpty ? null : upload,
             tooltip: 'Upload',
           );

@@ -44,10 +44,12 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
           actions: [
             IconButton(
               icon: Icon(
-                autoReplay ? Icons.replay : Icons.play_disabled,
+                Icons.replay_outlined,
+                color: autoReplay ? Colors.blue : Colors.black,
               ),
-              color: Colors.white,
-              onPressed: () => setState(() => autoReplay = !autoReplay),
+              onPressed: () => setState(
+                () => autoReplay = !autoReplay,
+              ),
             ),
             UploadButton(
               phrases: phrases.where((p) => p.exists),

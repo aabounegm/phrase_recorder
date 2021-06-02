@@ -129,7 +129,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                   widget.phrase.text,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

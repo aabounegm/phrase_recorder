@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:phrase_recorder/models/Phrase.dart';
@@ -28,7 +27,7 @@ Future<void> loadPhrases() async {
     for (final doc in d.docs) {
       final phrase = doc.data();
       phrase.path = '${recsDir.path}/${doc.id}.aac';
-      phrase.exists = await File(phrase.path).exists();
+      await phrase.checkIfExists();
       phrases.add(phrase);
     }
   });

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/firebase_builder.dart';
 import 'package:phrase_recorder/screens/PhraseList.dart';
-import 'package:phrase_recorder/store.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,13 +25,7 @@ class PhrasesApp extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
         ),
       ),
-      home: FirebaseBuilder(
-        future: loadPhrases(),
-        builder: () => PhraseListScreen(
-          phrases,
-          directory: recsDir,
-        ),
-      ),
+      home: PhraseListScreen(),
     );
   }
 }

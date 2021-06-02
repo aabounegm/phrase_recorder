@@ -1,8 +1,14 @@
+import 'dart:io';
+
 class Phrase {
   final String id;
   final String text;
   String path = '';
   bool exists = false;
+
+  Future<void> checkIfExists() async {
+    exists = await File(path).exists();
+  }
 
   Phrase({
     required this.id,

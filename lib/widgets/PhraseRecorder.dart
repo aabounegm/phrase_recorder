@@ -1,19 +1,21 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-
 import 'package:phrase_recorder/models/Phrase.dart';
 
 class PhraseRecorder extends StatefulWidget {
   final Phrase phrase;
+  final void Function() onUpdate;
   final void Function()? moveNext;
+  final void Function()? movePrev;
   final bool autoReplay;
 
   PhraseRecorder(
     this.phrase, {
+    required this.onUpdate,
     this.moveNext,
+    this.movePrev,
     this.autoReplay = false,
   });
 
@@ -26,7 +28,6 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
   var _isPlaying = false;
   var _playerIsInited = false;
   var _recorderIsInited = false;
-  var _playbackReady = false;
   final _player = FlutterSoundPlayer();
   final _recorder = FlutterSoundRecorder();
 
@@ -40,9 +41,6 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
       });
     });
     openTheRecorder();
-    if (widget.phrase.exists) {
-      _playbackReady = true;
-    }
     super.initState();
   }
 
@@ -69,7 +67,6 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     await _recorder.startRecorder(toFile: widget.phrase.id);
     setState(() {
       _isRecording = true;
-      _playbackReady = false;
     });
   }
 
@@ -78,15 +75,13 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     if (disposing) return;
     setState(() {
       _isRecording = false;
-      _playbackReady = true;
     });
+    widget.onUpdate();
   }
 
   Future<void> deleteRecording() async {
     await File(widget.phrase.path).delete();
-    setState(() {
-      _playbackReady = false;
-    });
+    widget.onUpdate();
   }
 
   Future<void> startPlaying() async {

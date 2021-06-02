@@ -112,46 +112,73 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     return Column(
       children: [
         Divider(height: 0),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            widget.phrase.text,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+        Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: IconButton(
+                onPressed: widget.movePrev,
+                icon: Icon(Icons.skip_previous_outlined),
+                iconSize: 28,
+              ),
             ),
-          ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  widget.phrase.text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: IconButton(
+                onPressed: widget.moveNext,
+                icon: Icon(Icons.skip_next_outlined),
+                iconSize: 28,
+              ),
+            ),
+          ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
-              iconSize: 42,
+              icon: Icon(Icons.delete_outline),
+              iconSize: 32,
               color: Colors.black,
-              onPressed: _isPlaying ? stopPlaying : startPlaying,
+              onPressed: widget.phrase.exists ? deleteRecording : null,
+              tooltip: 'Delete recording',
+            ),
+            GestureDetector(
+              onTapDown: (_) => startRecording(),
+              onVerticalDragEnd: (_) => stopRecording(),
+              onTapUp: (_) => stopRecording(),
+              child: IconButton(
+                icon: Icon(Icons.mic_none_outlined),
+                color: _isRecording ? Colors.blue : Colors.black,
+                iconSize: 42,
+                onPressed: () {},
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                _isPlaying ? Icons.stop_outlined : Icons.play_arrow_outlined,
+              ),
+              iconSize: 32,
+              color: Colors.black,
+              onPressed: widget.phrase.exists
+                  ? _isPlaying
+                      ? stopPlaying
+                      : startPlaying
+                  : null,
               tooltip: _isPlaying ? 'Stop playback' : 'Replay recording',
             ),
-            if (_recorderIsInited)
-              GestureDetector(
-                onTapDown: (_) => startRecording(),
-                onVerticalDragEnd: (_) => stopRecording(),
-                onTapUp: (_) => stopRecording(),
-                child: IconButton(
-                  icon: Icon(Icons.mic),
-                  color: _isRecording ? Colors.blue : Colors.black,
-                  iconSize: 42,
-                  onPressed: () {},
-                ),
-              ),
-            if (widget.moveNext != null)
-              IconButton(
-                icon: Icon(Icons.navigate_next),
-                color: Colors.black,
-                iconSize: 42,
-                onPressed: widget.moveNext,
-                tooltip: 'Next phrase',
-              ),
           ],
         ),
         SizedBox(height: 16),

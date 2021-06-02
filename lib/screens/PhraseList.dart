@@ -18,9 +18,11 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
   @override
   void initState() {
     super.initState();
-    loader = loadPhrases().then((_) {
-      phrase = phrases[0];
-    });
+    loader = loadPhrases().then(
+      (_) => setState(() {
+        phrase = phrases[0];
+      }),
+    );
   }
 
   void changePhrase(int delta) {
@@ -64,10 +66,8 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                         for (final p in phrases)
                           ListTile(
                             title: Text(p.text),
-                            subtitle: Text(p.id.toString()),
-                            trailing: p.exists
-                                ? Icon(Icons.check, color: Colors.green)
-                                : null,
+                            subtitle: Text(p.id),
+                            trailing: p.exists ? Icon(Icons.check) : null,
                             onTap: () => setState(() => phrase = p),
                             selected: phrase == p,
                           )

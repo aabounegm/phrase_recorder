@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/screens/PhraseList.dart';
 
@@ -7,25 +8,32 @@ void main() {
 }
 
 class PhrasesApp extends StatelessWidget {
+  final Future<FirebaseApp> initializer = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Phrases App',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-        accentColor: Colors.grey,
-        cardTheme: CardTheme(
-          clipBehavior: Clip.antiAlias,
-        ),
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        accentColor: Colors.grey,
-        cardTheme: CardTheme(
-          clipBehavior: Clip.antiAlias,
-        ),
-      ),
-      home: PhraseListScreen(),
+    return FutureBuilder(
+      future: initializer,
+      builder: (context, snapshot) {
+        return MaterialApp(
+          title: 'Phrases App',
+          theme: ThemeData(
+            primaryColor: Colors.white,
+            accentColor: Colors.grey,
+            cardTheme: CardTheme(
+              clipBehavior: Clip.antiAlias,
+            ),
+          ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            accentColor: Colors.grey,
+            cardTheme: CardTheme(
+              clipBehavior: Clip.antiAlias,
+            ),
+          ),
+          home: PhraseListScreen(),
+        );
+      },
     );
   }
 }

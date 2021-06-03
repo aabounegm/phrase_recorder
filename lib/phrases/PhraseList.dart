@@ -45,7 +45,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
               phrases: phrases.where((p) => p.recorded),
               directory: recsDir,
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 4),
           ],
         ),
         body: phrases.isEmpty
@@ -57,9 +57,17 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                       children: [
                         for (final p in phrases)
                           ListTile(
-                            title: Text(p.text),
+                            title: Text(
+                              p.text,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             subtitle: Text(p.id),
-                            trailing: p.recorded ? Icon(Icons.check) : null,
+                            trailing: p.recorded
+                                ? Icon(Icons.check_circle_outline)
+                                : null,
                             onTap: () => setState(() => phrase = p),
                             selected: phrase == p,
                           )

@@ -64,93 +64,119 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
         ),
       );
     }
-    return Column(
-      children: [
-        Divider(height: 0),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: IconButton(
-                onPressed: widget.movePrev,
-                icon: Icon(Icons.skip_previous_outlined),
-                iconSize: 28,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  widget.phrase.text,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return Ink(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(32),
+          bottom: Radius.zero,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 4,
+            blurRadius: 8,
+            offset: Offset(0, 4), // changes position of shadow
+          ),
+        ],
+      ),
+      child: initialized
+          ? Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: IconButton(
+                        onPressed: widget.movePrev,
+                        icon: Icon(Icons.skip_previous_outlined),
+                        iconSize: 28,
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          widget.phrase.text,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: IconButton(
+                        onPressed: widget.moveNext,
+                        icon: Icon(Icons.skip_next_outlined),
+                        iconSize: 28,
+                      ),
+                    ),
+                  ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.delete_outline),
+                      iconSize: 32,
+                      color: Colors.black,
+                      onPressed: widget.phrase.recorded
+                          ? () => File(widget.phrase.path)
+                              .delete()
+                              .then((_) => widget.onUpdate())
+                          : null,
+                      tooltip: 'Delete recording',
+                    ),
+                    GestureDetector(
+                      onTapDown: (_) => recorder
+                          .startRecorder(toFile: widget.phrase.path)
+                          .then((_) => setState(() {})),
+                      onTapCancel: () => stopRecording(),
+                      onVerticalDragEnd: (_) => stopRecording(),
+                      onTapUp: (_) => stopRecording(),
+                      child: IconButton(
+                        icon: Icon(Icons.mic_none_outlined),
+                        color:
+                            recorder.isRecording ? Colors.blue : Colors.black,
+                        iconSize: 42,
+                        onPressed: () {},
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        player.isPlaying
+                            ? Icons.stop_outlined
+                            : Icons.play_arrow_outlined,
+                      ),
+                      iconSize: 32,
+                      color: Colors.black,
+                      onPressed: widget.phrase.recorded
+                          ? player.isPlaying
+                              ? player.stopPlayer
+                              : () => player.startPlayer(
+                                    fromURI: widget.phrase.path,
+                                    whenFinished: () => widget.onUpdate,
+                                  )
+                          : null,
+                      tooltip: player.isPlaying
+                          ? 'Stop playback'
+                          : 'Replay recording',
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+              ],
+            )
+          : Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: CircularProgressIndicator(),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: IconButton(
-                onPressed: widget.moveNext,
-                icon: Icon(Icons.skip_next_outlined),
-                iconSize: 28,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: Icon(Icons.delete_outline),
-              iconSize: 32,
-              color: Colors.black,
-              onPressed: widget.phrase.recorded
-                  ? () => File(widget.phrase.path)
-                      .delete()
-                      .then((_) => widget.onUpdate())
-                  : null,
-              tooltip: 'Delete recording',
-            ),
-            GestureDetector(
-              onTapDown: (_) => recorder
-                  .startRecorder(toFile: widget.phrase.path)
-                  .then((_) => setState(() {})),
-              onTapCancel: () => stopRecording(),
-              onVerticalDragEnd: (_) => stopRecording(),
-              onTapUp: (_) => stopRecording(),
-              child: IconButton(
-                icon: Icon(Icons.mic_none_outlined),
-                color: recorder.isRecording ? Colors.blue : Colors.black,
-                iconSize: 42,
-                onPressed: () {},
-              ),
-            ),
-            IconButton(
-              icon: Icon(
-                player.isPlaying
-                    ? Icons.stop_outlined
-                    : Icons.play_arrow_outlined,
-              ),
-              iconSize: 32,
-              color: Colors.black,
-              onPressed: widget.phrase.recorded
-                  ? player.isPlaying
-                      ? player.stopPlayer
-                      : () => player.startPlayer(
-                            fromURI: widget.phrase.path,
-                            whenFinished: () => widget.onUpdate,
-                          )
-                  : null,
-              tooltip: player.isPlaying ? 'Stop playback' : 'Replay recording',
-            ),
-          ],
-        ),
-        SizedBox(height: 16),
-      ],
     );
   }
 }

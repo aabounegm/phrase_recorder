@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:phrase_recorder/phrases/Phrase.dart';
+import 'package:vibration/vibration.dart';
 
 class PhraseRecorder extends StatefulWidget {
   final Phrase phrase;
@@ -42,22 +43,31 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
 
   @override
   void dispose() {
-    player.stopPlayer();
+    togglePlayback(false);
     player.closeAudioSession();
-    stopRecording();
+    toggleRecording(false);
     recorder.stopRecorder();
     recorder.closeAudioSession();
     super.dispose();
   }
 
-  void stopRecording() {
-    recorder
-        .stopRecorder()
-        .then((_) => widget.onUpdate())
-        .then((_) => togglePlayback(playing: true));
+  void toggleRecording(bool? recording) {
+    recording ??= !recorder.isRecording;
+    if (recording) {
+      recorder.startRecorder(toFile: widget.phrase.path).then((_) {
+        Vibration.vibrate(duration: 100);
+        setState(() {});
+      });
+    } else {
+      recorder.stopRecorder().then((_) {
+        widget.onUpdate();
+        Vibration.vibrate(duration: 100);
+        togglePlayback(true);
+      });
+    }
   }
 
-  Future<void> togglePlayback({bool? playing}) async {
+  Future<void> togglePlayback(bool? playing) async {
     playing ??= !player.isPlaying;
     if (playing) {
       await player.startPlayer(
@@ -101,7 +111,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
       },
     );
     if (delete == true) {
-      await togglePlayback(playing: false);
+      await togglePlayback(false);
       await File(widget.phrase.path).delete();
       widget.onUpdate();
     }
@@ -172,12 +182,10 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       tooltip: 'Delete recording',
                     ),
                     GestureDetector(
-                      onTapDown: (_) => recorder
-                          .startRecorder(toFile: widget.phrase.path)
-                          .then((_) => setState(() {})),
-                      onTapCancel: () => stopRecording(),
-                      onVerticalDragEnd: (_) => stopRecording(),
-                      onTapUp: (_) => stopRecording(),
+                      onTapDown: (_) => toggleRecording(true),
+                      onTapCancel: () => toggleRecording(false),
+                      onVerticalDragEnd: (_) => toggleRecording(false),
+                      onTapUp: (_) => toggleRecording(false),
                       child: IconButton(
                         icon: Icon(Icons.mic_none_outlined),
                         color:
@@ -194,7 +202,9 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       ),
                       iconSize: 32,
                       color: Colors.black,
-                      onPressed: widget.phrase.recorded ? togglePlayback : null,
+                      onPressed: widget.phrase.recorded
+                          ? () => togglePlayback(null)
+                          : null,
                       tooltip: player.isPlaying
                           ? 'Stop playback'
                           : 'Replay recording',

@@ -4,10 +4,10 @@ class Phrase {
   final String id;
   final String text;
   String path = '';
-  bool exists = false;
+  bool recorded = false;
 
   Future<void> checkIfExists() async {
-    exists = await File(path).exists();
+    recorded = await File(path).exists();
   }
 
   Phrase({

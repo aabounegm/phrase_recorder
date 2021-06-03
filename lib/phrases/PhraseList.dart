@@ -13,7 +13,6 @@ class PhraseListScreen extends StatefulWidget {
 class _PhraseListScreenState extends State<PhraseListScreen> {
   late Phrase? phrase;
   late Future<void>? loader;
-  bool autoReplay = true;
 
   @override
   void initState() {
@@ -42,17 +41,8 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
         appBar: AppBar(
           title: Text('Phrase list'),
           actions: [
-            IconButton(
-              icon: Icon(
-                Icons.replay_outlined,
-                color: autoReplay ? Colors.blue : Colors.black,
-              ),
-              onPressed: () => setState(
-                () => autoReplay = !autoReplay,
-              ),
-            ),
             UploadButton(
-              phrases: phrases.where((p) => p.exists),
+              phrases: phrases.where((p) => p.recorded),
               directory: recsDir,
             ),
             SizedBox(width: 8),
@@ -69,7 +59,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                           ListTile(
                             title: Text(p.text),
                             subtitle: Text(p.id),
-                            trailing: p.exists ? Icon(Icons.check) : null,
+                            trailing: p.recorded ? Icon(Icons.check) : null,
                             onTap: () => setState(() => phrase = p),
                             selected: phrase == p,
                           )
@@ -80,10 +70,9 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                       ? Text('Select phrase above')
                       : PhraseRecorder(
                           phrase as Phrase,
-                          autoReplay: autoReplay,
-                          onUpdate: () => setState(() async {
-                            await phrase!.checkIfExists();
-                          }),
+                          onUpdate: () => phrase!
+                              .checkIfExists()
+                              .then((_) => setState(() {})),
                           movePrev: () => changePhrase(-1),
                           moveNext: () => changePhrase(1),
                         )

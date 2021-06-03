@@ -9,14 +9,12 @@ class PhraseRecorder extends StatefulWidget {
   final void Function() onUpdate;
   final void Function()? moveNext;
   final void Function()? movePrev;
-  final bool autoReplay;
 
   PhraseRecorder(
     this.phrase, {
     required this.onUpdate,
     this.moveNext,
     this.movePrev,
-    this.autoReplay = false,
   });
 
   @override
@@ -24,95 +22,53 @@ class PhraseRecorder extends StatefulWidget {
 }
 
 class _PhraseRecorderState extends State<PhraseRecorder> {
-  var _isRecording = false;
-  var _isPlaying = false;
-  var _playerIsInited = false;
-  var _recorderIsInited = false;
-  final _player = FlutterSoundPlayer();
-  final _recorder = FlutterSoundRecorder();
+  final player = FlutterSoundPlayer();
+  final recorder = FlutterSoundRecorder();
+  bool initialized = false;
 
   @override
   void initState() {
-    // Be careful: openAudioSession returns a Future.
-    // Do not access your FlutterSoundPlayer or FlutterSoundRecorder before the completion of the Future
-    _player.openAudioSession().then((value) {
-      setState(() {
-        _playerIsInited = true;
-      });
-    });
-    openTheRecorder();
     super.initState();
+    Permission.microphone
+        .request()
+        .then((_) => recorder.openAudioSession())
+        .then((_) => player.openAudioSession())
+        .then(
+          (_) => setState(() {
+            initialized = true;
+          }),
+        );
   }
 
   @override
   void dispose() {
-    stopPlaying(disposing: true);
-    _player.closeAudioSession();
-
-    stopRecording(disposing: true);
-    _recorder.closeAudioSession();
-
+    player.stopPlayer();
+    player.closeAudioSession();
+    stopRecording();
+    recorder.stopRecorder();
+    recorder.closeAudioSession();
     super.dispose();
   }
 
-  Future<void> openTheRecorder() async {
-    await Permission.microphone.request();
-    await _recorder.openAudioSession();
-    setState(() {
-      _recorderIsInited = true;
-    });
-  }
-
-  Future<void> startRecording() async {
-    await _recorder.startRecorder(toFile: widget.phrase.id);
-    setState(() {
-      _isRecording = true;
-    });
-  }
-
-  Future<void> stopRecording({bool disposing = false}) async {
-    await _recorder.stopRecorder();
-    if (disposing) return;
-    setState(() {
-      _isRecording = false;
-    });
-    widget.onUpdate();
-  }
-
-  Future<void> deleteRecording() async {
-    await File(widget.phrase.path).delete();
-    widget.onUpdate();
-  }
-
-  Future<void> startPlaying() async {
-    assert(_playerIsInited);
-    setState(() {
-      _isPlaying = true;
-    });
-    await _player.startPlayer(
-      fromURI: widget.phrase.path,
-      whenFinished: () {
-        setState(() {
-          _isPlaying = false;
-        });
-      },
-    );
-  }
-
-  Future<void> stopPlaying({bool disposing = false}) async {
-    await _player.stopPlayer();
-    if (disposing) return;
-    setState(() {
-      _isPlaying = false;
-    });
+  void stopRecording() {
+    recorder.stopRecorder().then((_) => widget.onUpdate());
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!initialized) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Column(
       children: [
         Divider(height: 0),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(8),
@@ -152,32 +108,44 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
               icon: Icon(Icons.delete_outline),
               iconSize: 32,
               color: Colors.black,
-              onPressed: widget.phrase.exists ? deleteRecording : null,
+              onPressed: widget.phrase.recorded
+                  ? () => File(widget.phrase.path)
+                      .delete()
+                      .then((_) => widget.onUpdate())
+                  : null,
               tooltip: 'Delete recording',
             ),
             GestureDetector(
-              onTapDown: (_) => startRecording(),
+              onTapDown: (_) => recorder
+                  .startRecorder(toFile: widget.phrase.path)
+                  .then((_) => setState(() {})),
+              onTapCancel: () => stopRecording(),
               onVerticalDragEnd: (_) => stopRecording(),
               onTapUp: (_) => stopRecording(),
               child: IconButton(
                 icon: Icon(Icons.mic_none_outlined),
-                color: _isRecording ? Colors.blue : Colors.black,
+                color: recorder.isRecording ? Colors.blue : Colors.black,
                 iconSize: 42,
                 onPressed: () {},
               ),
             ),
             IconButton(
               icon: Icon(
-                _isPlaying ? Icons.stop_outlined : Icons.play_arrow_outlined,
+                player.isPlaying
+                    ? Icons.stop_outlined
+                    : Icons.play_arrow_outlined,
               ),
               iconSize: 32,
               color: Colors.black,
-              onPressed: widget.phrase.exists
-                  ? _isPlaying
-                      ? stopPlaying
-                      : startPlaying
+              onPressed: widget.phrase.recorded
+                  ? player.isPlaying
+                      ? player.stopPlayer
+                      : () => player.startPlayer(
+                            fromURI: widget.phrase.path,
+                            whenFinished: () => widget.onUpdate,
+                          )
                   : null,
-              tooltip: _isPlaying ? 'Stop playback' : 'Replay recording',
+              tooltip: player.isPlaying ? 'Stop playback' : 'Replay recording',
             ),
           ],
         ),

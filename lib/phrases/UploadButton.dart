@@ -62,8 +62,9 @@ class UploadButton extends StatelessWidget {
       files: files,
       zipFile: zipFile,
     );
+    var timestamp = DateTime.now().millisecondsSinceEpoch;
     await FirebaseStorage.instance
-        .ref('uploads/recordings_new.zip')
+        .ref('uploads/recordings-$timestamp.zip')
         .putFile(zipFile);
     await zipFile.delete();
     await Future.wait(files.map((file) => file.delete()));

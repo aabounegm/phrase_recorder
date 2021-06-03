@@ -51,7 +51,23 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
   }
 
   void stopRecording() {
-    recorder.stopRecorder().then((_) => widget.onUpdate());
+    recorder
+        .stopRecorder()
+        .then((_) => widget.onUpdate())
+        .then((_) => togglePlayback(playing: true));
+  }
+
+  Future<void> togglePlayback({bool? playing}) async {
+    playing ??= !player.isPlaying;
+    if (playing) {
+      await player.startPlayer(
+        fromURI: widget.phrase.path,
+        whenFinished: () => setState(() {}),
+      );
+    } else {
+      await player.stopPlayer();
+    }
+    setState(() {});
   }
 
   @override
@@ -116,8 +132,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       iconSize: 32,
                       color: Colors.black,
                       onPressed: widget.phrase.recorded
-                          ? () => player
-                              .stopPlayer()
+                          ? () => togglePlayback(playing: false)
                               .then((_) => File(widget.phrase.path).delete())
                               .then((_) => widget.onUpdate())
                           : null,
@@ -146,17 +161,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       ),
                       iconSize: 32,
                       color: Colors.black,
-                      onPressed: widget.phrase.recorded
-                          ? () {
-                              (player.isPlaying
-                                      ? player.stopPlayer()
-                                      : player.startPlayer(
-                                          fromURI: widget.phrase.path,
-                                          whenFinished: () => setState(() {}),
-                                        ))
-                                  .then((_) => setState(() {}));
-                            }
-                          : null,
+                      onPressed: widget.phrase.recorded ? togglePlayback : null,
                       tooltip: player.isPlaying
                           ? 'Stop playback'
                           : 'Replay recording',

@@ -13,6 +13,7 @@ class PhraseListScreen extends StatefulWidget {
 class _PhraseListScreenState extends State<PhraseListScreen> {
   late Phrase? phrase;
   late Future<void>? loader;
+  bool recordedOnly = false;
 
   @override
   void initState() {
@@ -41,6 +42,15 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
         appBar: AppBar(
           title: Text('Phrase list'),
           actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  recordedOnly = !recordedOnly;
+                });
+              },
+              icon: Icon(Icons.library_music_outlined),
+              color: recordedOnly ? Colors.blue : Colors.black,
+            ),
             UploadButton(
               phrases: phrases.where((p) => p.recorded),
               directory: recsDir,
@@ -55,7 +65,9 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                   Expanded(
                     child: ListView(
                       children: [
-                        for (final p in phrases)
+                        for (final p in recordedOnly
+                            ? phrases.where((p) => p.recorded)
+                            : phrases)
                           ListTile(
                             title: Text(
                               p.text,

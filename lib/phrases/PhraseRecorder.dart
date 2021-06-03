@@ -65,10 +65,9 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 4,
-            blurRadius: 8,
-            offset: Offset(0, 4), // changes position of shadow
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 4,
           ),
         ],
       ),

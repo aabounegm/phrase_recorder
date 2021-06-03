@@ -66,7 +66,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                             ),
                             subtitle: Text(p.id),
                             trailing: p.recorded
-                                ? Icon(Icons.check_circle_outline)
+                                ? Icon(Icons.audiotrack_outlined)
                                 : null,
                             onTap: () => setState(() => phrase = p),
                             selected: phrase == p,

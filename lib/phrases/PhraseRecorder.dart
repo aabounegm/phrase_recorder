@@ -117,8 +117,9 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       iconSize: 32,
                       color: Colors.black,
                       onPressed: widget.phrase.recorded
-                          ? () => File(widget.phrase.path)
-                              .delete()
+                          ? () => player
+                              .stopPlayer()
+                              .then((_) => File(widget.phrase.path).delete())
                               .then((_) => widget.onUpdate())
                           : null,
                       tooltip: 'Delete recording',

@@ -147,12 +147,15 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       iconSize: 32,
                       color: Colors.black,
                       onPressed: widget.phrase.recorded
-                          ? player.isPlaying
-                              ? player.stopPlayer
-                              : () => player.startPlayer(
-                                    fromURI: widget.phrase.path,
-                                    whenFinished: () => widget.onUpdate,
-                                  )
+                          ? () {
+                              (player.isPlaying
+                                      ? player.stopPlayer()
+                                      : player.startPlayer(
+                                          fromURI: widget.phrase.path,
+                                          whenFinished: () => setState(() {}),
+                                        ))
+                                  .then((_) => setState(() {}));
+                            }
                           : null,
                       tooltip: player.isPlaying
                           ? 'Stop playback'

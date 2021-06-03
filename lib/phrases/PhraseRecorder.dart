@@ -56,14 +56,6 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
 
   @override
   Widget build(BuildContext context) {
-    if (!initialized) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
     return Ink(
       decoration: BoxDecoration(
         color: Colors.white,

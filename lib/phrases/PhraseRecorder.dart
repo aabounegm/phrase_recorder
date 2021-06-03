@@ -70,6 +70,43 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     setState(() {});
   }
 
+  Future<void> deleteRecord() async {
+    var delete = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete ${widget.phrase.text} ?'),
+          actions: [
+            TextButton.icon(
+              onPressed: () => Navigator.pop(
+                context,
+                true,
+              ),
+              icon: Icon(Icons.delete_forever_outlined, color: Colors.red),
+              label: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () => Navigator.pop(
+                context,
+                false,
+              ),
+              icon: Icon(Icons.check_outlined),
+              label: Text('Keep'),
+            ),
+          ],
+        );
+      },
+    );
+    if (delete == true) {
+      await togglePlayback(playing: false);
+      await File(widget.phrase.path).delete();
+      widget.onUpdate();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Ink(
@@ -131,11 +168,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       icon: Icon(Icons.delete_outline),
                       iconSize: 32,
                       color: Colors.black,
-                      onPressed: widget.phrase.recorded
-                          ? () => togglePlayback(playing: false)
-                              .then((_) => File(widget.phrase.path).delete())
-                              .then((_) => widget.onUpdate())
-                          : null,
+                      onPressed: widget.phrase.recorded ? deleteRecord : null,
                       tooltip: 'Delete recording',
                     ),
                     GestureDetector(

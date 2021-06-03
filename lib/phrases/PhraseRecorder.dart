@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:phrase_recorder/models/Phrase.dart';
+import 'package:phrase_recorder/phrases/Phrase.dart';
 
 class PhraseRecorder extends StatefulWidget {
   final Phrase phrase;

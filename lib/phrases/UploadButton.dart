@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_archive/flutter_archive.dart';
-import 'package:phrase_recorder/models/Phrase.dart';
+import 'package:phrase_recorder/phrases/Phrase.dart';
 
 class UploadButton extends StatefulWidget {
   final Iterable<Phrase> phrases;

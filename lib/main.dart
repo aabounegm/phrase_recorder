@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/screens/PhraseList.dart';
+import 'package:phrase_recorder/phrases/PhraseList.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

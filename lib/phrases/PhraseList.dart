@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/firebase_builder.dart';
-import 'package:phrase_recorder/models/Phrase.dart';
+import 'package:phrase_recorder/phrases/Phrase.dart';
 import 'package:phrase_recorder/store.dart';
-import 'package:phrase_recorder/widgets/PhraseRecorder.dart';
-import 'package:phrase_recorder/widgets/UploadButton.dart';
+import 'PhraseRecorder.dart';
+import 'UploadButton.dart';
 
 class PhraseListScreen extends StatefulWidget {
   @override

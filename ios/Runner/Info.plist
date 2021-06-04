@@ -40,6 +40,10 @@
 	<string>MyApp does not need this permission</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>MyApp does not need this permission</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>MyApp does not need this permission</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>MyApp does not need this permission</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

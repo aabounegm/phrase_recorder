@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/firebase_builder.dart';
 import 'package:phrase_recorder/phrases/Phrase.dart';
 import 'package:phrase_recorder/store.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'PhraseRecorder.dart';
 import 'UploadButton.dart';
 
@@ -11,18 +11,15 @@ class PhraseListScreen extends StatefulWidget {
 }
 
 class _PhraseListScreenState extends State<PhraseListScreen> {
-  late Phrase? phrase;
-  late Future<void>? loader;
+  final RefreshController _refreshController = RefreshController(
+    initialRefresh: true,
+  );
+  Phrase? phrase;
   bool recordedOnly = false;
 
   @override
   void initState() {
     super.initState();
-    loader = loadPhrases().then(
-      (_) => setState(() {
-        phrase = phrases[0];
-      }),
-    );
   }
 
   void changePhrase(int delta) {
@@ -36,68 +33,76 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FirebaseBuilder(
-      future: loader,
-      builder: () => Scaffold(
-        appBar: AppBar(
-          title: Text('Phrase list'),
-          actions: [
-            IconButton(
-              onPressed: () {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Phrase list'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                recordedOnly = !recordedOnly;
+              });
+            },
+            icon: Icon(Icons.library_music_outlined),
+            color: recordedOnly ? Colors.blue : Colors.black,
+          ),
+          UploadButton(
+            phrases: phrases.where((p) => p.recorded),
+            directory: recsDir,
+          ),
+          SizedBox(width: 4),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SmartRefresher(
+              header: MaterialClassicHeader(
+                color: Colors.blue,
+              ),
+              controller: _refreshController,
+              onRefresh: () => loadPhrases().then((_) {
                 setState(() {
-                  recordedOnly = !recordedOnly;
+                  phrase = phrases[0];
                 });
-              },
-              icon: Icon(Icons.library_music_outlined),
-              color: recordedOnly ? Colors.blue : Colors.black,
-            ),
-            UploadButton(
-              phrases: phrases.where((p) => p.recorded),
-              directory: recsDir,
-            ),
-            SizedBox(width: 4),
-          ],
-        ),
-        body: phrases.isEmpty
-            ? Center(child: Text('No phrases yet'))
-            : Column(
+                _refreshController.refreshCompleted();
+              }),
+              // onLoading: _onLoading,
+              child: ListView(
                 children: [
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        for (final p in recordedOnly
-                            ? phrases.where((p) => p.recorded)
-                            : phrases)
-                          ListTile(
-                            title: Text(
-                              p.text,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(p.id),
-                            trailing: p.recorded
-                                ? Icon(Icons.audiotrack_outlined)
-                                : null,
-                            onTap: () => setState(() => phrase = p),
-                            selected: phrase == p,
-                          )
-                      ],
-                    ),
-                  ),
-                  phrase == null
-                      ? Text('Select phrase above')
-                      : PhraseRecorder(
-                          phrase as Phrase,
-                          onUpdate: () => phrase!
-                              .checkIfExists()
-                              .then((_) => setState(() {})),
-                          movePrev: () => changePhrase(-1),
-                          moveNext: () => changePhrase(1),
-                        )
+                  if (phrases.isEmpty && !_refreshController.isRefresh)
+                    Center(child: Text('No phrases yet')),
+                  for (final p in recordedOnly
+                      ? phrases.where((p) => p.recorded)
+                      : phrases)
+                    ListTile(
+                      title: Text(
+                        p.text,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(p.id),
+                      trailing:
+                          p.recorded ? Icon(Icons.audiotrack_outlined) : null,
+                      onTap: () => setState(() => phrase = p),
+                      selected: phrase == p,
+                    )
                 ],
               ),
+            ),
+          ),
+          if (phrase != null)
+            PhraseRecorder(
+              phrase as Phrase,
+              onUpdate: () => phrase!.checkIfExists().then(
+                    (_) => setState(() {}),
+                  ),
+              movePrev: () => changePhrase(-1),
+              moveNext: () => changePhrase(1),
+            ),
+        ],
       ),
     );
   }

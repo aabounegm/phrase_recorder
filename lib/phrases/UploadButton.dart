@@ -26,7 +26,9 @@ class UploadButton extends StatelessWidget {
                   upload().then((_) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Content uploaded successfully!')),
+                      SnackBar(
+                        content: Text('Content uploaded successfully!'),
+                      ),
                     );
                   });
                   return WillPopScope(
@@ -67,6 +69,6 @@ class UploadButton extends StatelessWidget {
         .ref('uploads/recordings-$timestamp.zip')
         .putFile(zipFile);
     await zipFile.delete();
-    await Future.wait(files.map((file) => file.delete()));
+    // await Future.wait(files.map((file) => file.delete()));
   }
 }

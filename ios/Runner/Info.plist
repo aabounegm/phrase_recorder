@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Khiyar</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,6 +25,10 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
+	<string>MyApp does not need this permission</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>MyApp does not need this permission</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>MyApp does not need this permission</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>MyApp does not need this permission</string>

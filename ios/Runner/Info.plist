@@ -26,6 +26,10 @@
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>MyApp does not need this permission</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>MyApp does not need this permission</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>MyApp does not need this permission</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>MyApp does not need this permission</string>
 	<key>NSCameraUsageDescription</key>
@@ -39,10 +43,6 @@
 	<key>NSMotionUsageDescription</key>
 	<string>MyApp does not need this permission</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>MyApp does not need this permission</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>MyApp does not need this permission</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>MyApp does not need this permission</string>
 	<key>UIBackgroundModes</key>
 	<array>

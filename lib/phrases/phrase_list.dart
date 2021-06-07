@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/phrases/Phrase.dart';
+import 'package:phrase_recorder/chapters/chapter.dart';
+import 'package:phrase_recorder/phrases/phrase.dart';
 import 'package:phrase_recorder/store.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'PhraseRecorder.dart';
-import 'UploadButton.dart';
+import 'phrase_recorder.dart';
+import 'upload_button.dart';
 
 class PhraseListScreen extends StatefulWidget {
+  final Chapter chapter;
+  PhraseListScreen({required this.chapter});
+
   @override
   _PhraseListScreenState createState() => _PhraseListScreenState();
 }
@@ -14,6 +18,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
   final RefreshController _refreshController = RefreshController(
     initialRefresh: true,
   );
+  List<Phrase> get phrases => widget.chapter.phrases;
   Phrase? phrase;
   bool recordedOnly = false;
 
@@ -46,10 +51,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
             icon: Icon(Icons.library_music_outlined),
             color: recordedOnly ? Colors.blue : Colors.black,
           ),
-          UploadButton(
-            phrases: phrases.where((p) => p.recorded),
-            directory: recsDir,
-          ),
+          UploadButton(chapter: widget.chapter),
           SizedBox(width: 4),
         ],
       ),
@@ -61,7 +63,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                 color: Colors.blue,
               ),
               controller: _refreshController,
-              onRefresh: () => loadPhrases().then((_) {
+              onRefresh: () => loadPhrases(widget.chapter).then((_) {
                 setState(() {
                   phrase = phrases[0];
                 });
@@ -73,7 +75,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                   if (phrases.isEmpty && !_refreshController.isRefresh)
                     Center(child: Text('No phrases yet')),
                   for (final p in recordedOnly
-                      ? phrases.where((p) => p.recorded)
+                      ? phrases.where((p) => p.exists)
                       : phrases)
                     ListTile(
                       title: Text(
@@ -85,7 +87,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                       ),
                       subtitle: Text(p.id),
                       trailing:
-                          p.recorded ? Icon(Icons.audiotrack_outlined) : null,
+                          p.exists ? Icon(Icons.audiotrack_outlined) : null,
                       onTap: () => setState(() => phrase = p),
                       selected: phrase == p,
                     )

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:phrase_recorder/phrases/Phrase.dart';
+import 'package:phrase_recorder/phrases/phrase.dart';
 import 'package:vibration/vibration.dart';
 
 class PhraseRecorder extends StatefulWidget {
@@ -54,7 +54,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
   void toggleRecording(bool? recording) {
     recording ??= !recorder.isRecording;
     if (recording) {
-      recorder.startRecorder(toFile: widget.phrase.path).then((_) {
+      recorder.startRecorder(toFile: widget.phrase.file.path).then((_) {
         Vibration.vibrate(duration: 100);
         setState(() {});
       });
@@ -71,7 +71,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     playing ??= !player.isPlaying;
     if (playing) {
       await player.startPlayer(
-        fromURI: widget.phrase.path,
+        fromURI: widget.phrase.file.path,
         whenFinished: () => setState(() {}),
       );
     } else {
@@ -112,7 +112,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     );
     if (delete == true) {
       await togglePlayback(false);
-      await File(widget.phrase.path).delete();
+      await widget.phrase.file.delete();
       widget.onUpdate();
     }
   }
@@ -178,7 +178,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       icon: Icon(Icons.delete_outline),
                       iconSize: 32,
                       color: Colors.black,
-                      onPressed: widget.phrase.recorded ? deleteRecord : null,
+                      onPressed: widget.phrase.exists ? deleteRecord : null,
                       tooltip: 'Delete recording',
                     ),
                     GestureDetector(
@@ -202,7 +202,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                       ),
                       iconSize: 32,
                       color: Colors.black,
-                      onPressed: widget.phrase.recorded
+                      onPressed: widget.phrase.exists
                           ? () => togglePlayback(null)
                           : null,
                       tooltip: player.isPlaying

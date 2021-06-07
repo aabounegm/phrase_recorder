@@ -3,22 +3,30 @@ import 'dart:io';
 class Phrase {
   final String id;
   final String text;
-  String path = '';
-  bool recorded = false;
+  late final File file;
+  bool exists = false;
 
   Future<void> checkIfExists() async {
-    recorded = await File(path).exists();
+    exists = await file.exists();
   }
 
   Phrase({
     required this.id,
     required this.text,
-  });
+    required String root,
+  }) {
+    file = File('$root/$id.aac');
+    checkIfExists();
+  }
 
-  Phrase.fromJson(Map<String, dynamic> json, String id)
-      : this(
+  Phrase.fromJson(
+    Map<String, dynamic> json, {
+    required String id,
+    required String root,
+  }) : this(
           id: id,
           text: json['text'],
+          root: root,
         );
 
   Map<String, dynamic> toJson() {

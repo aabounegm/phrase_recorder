@@ -3,21 +3,17 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_archive/flutter_archive.dart';
-import 'package:phrase_recorder/phrases/Phrase.dart';
+import 'package:phrase_recorder/chapters/chapter.dart';
 
 class UploadButton extends StatelessWidget {
-  final Iterable<Phrase> phrases;
-  final Directory directory;
-  UploadButton({
-    required this.phrases,
-    required this.directory,
-  });
+  final Chapter chapter;
+  UploadButton({required this.chapter});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.cloud_upload_outlined),
-      onPressed: phrases.isEmpty
+      onPressed: chapter.phrases.isEmpty
           ? null
           : () => showDialog(
                 context: context,
@@ -57,16 +53,16 @@ class UploadButton extends StatelessWidget {
   }
 
   Future<void> upload() async {
-    final files = phrases.map((p) => File(p.path)).toList();
-    final zipFile = File('${directory.path}/all.zip');
+    final files = chapter.phrases.map((p) => p.file).toList();
+    final zipFile = File('${chapter.directory.path}/all.zip');
     await ZipFile.createFromFiles(
-      sourceDir: directory,
+      sourceDir: chapter.directory,
       files: files,
       zipFile: zipFile,
     );
     var timestamp = DateTime.now().millisecondsSinceEpoch;
     await FirebaseStorage.instance
-        .ref('uploads/recordings-$timestamp.zip')
+        .ref('recordings/${chapter.id}/$timestamp.zip')
         .putFile(zipFile);
     await zipFile.delete();
     // await Future.wait(files.map((file) => file.delete()));

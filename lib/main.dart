@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/phrases/PhraseList.dart';
+import 'package:phrase_recorder/phrases/phrase_list.dart';
+import 'package:phrase_recorder/store.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -8,7 +9,8 @@ void main() {
 }
 
 class PhrasesApp extends StatelessWidget {
-  final Future<FirebaseApp> initializer = Firebase.initializeApp();
+  final Future initializer =
+      Firebase.initializeApp().then((_) => loadChapters());
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,9 @@ class PhrasesApp extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
             ),
           ),
-          home: PhraseListScreen(),
+          home: PhraseListScreen(
+            chapter: chapters.first,
+          ),
         );
       },
     );

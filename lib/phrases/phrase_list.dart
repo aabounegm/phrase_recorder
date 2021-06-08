@@ -21,6 +21,12 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
   List<Phrase> get phrases => widget.chapter.phrases;
   int get recorded => widget.chapter.phrases.where((p) => p.exists).length;
 
+  @override
+  void initState() {
+    super.initState();
+    phrase = phrases.first;
+  }
+
   void changePhrase(int delta) {
     final i = phrase == null ? -1 : phrases.indexOf(phrase!);
     final l = phrases.length;
@@ -68,7 +74,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
               controller: _refreshController,
               onRefresh: () => loadPhrases(widget.chapter).then((_) {
                 setState(() {
-                  phrase = phrases[0];
+                  phrase = phrases.first;
                 });
                 _refreshController.refreshCompleted();
               }),

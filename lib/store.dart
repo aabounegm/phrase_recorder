@@ -6,10 +6,10 @@ import 'phrases/phrase.dart';
 import 'chapters/chapter.dart';
 
 List<Chapter> chapters = [];
-late final Directory root;
+Directory? root;
 
 Future<void> loadChapters() async {
-  root = await getApplicationDocumentsDirectory().then(
+  root ??= await getApplicationDocumentsDirectory().then(
     (r) => Directory('${r.path}/recordings'),
   );
 
@@ -39,7 +39,7 @@ Future<void> loadPhrases(Chapter chapter) async {
         fromFirestore: (snapshot, _) => Phrase.fromJson(
           snapshot.data()!,
           id: snapshot.id,
-          root: root.path,
+          root: root!.path,
         ),
         toFirestore: (Phrase object, _) => object.toJson(),
       )

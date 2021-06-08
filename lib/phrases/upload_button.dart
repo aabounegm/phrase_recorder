@@ -56,9 +56,9 @@ class UploadButton extends StatelessWidget {
   Future<void> upload() async {
     final files =
         chapter.phrases.where((p) => p.exists).map((p) => p.file).toList();
-    final zipFile = File('${root.path}/${chapter.id}.zip');
+    final zipFile = File('${root!.path}/${chapter.id}.zip');
     await ZipFile.createFromFiles(
-      sourceDir: root,
+      sourceDir: root!,
       files: files,
       zipFile: zipFile,
     );

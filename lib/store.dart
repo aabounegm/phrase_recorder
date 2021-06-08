@@ -1,24 +1,24 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path_provider/path_provider.dart';
 import 'phrases/phrase.dart';
 import 'chapters/chapter.dart';
 
 List<Chapter> chapters = [];
+late final Directory root;
 
 Future<void> loadChapters() async {
-  final root = await getApplicationDocumentsDirectory().then(
-    (r) => '$r/recordings',
+  root = await getApplicationDocumentsDirectory().then(
+    (r) => Directory('${r.path}/recordings'),
   );
 
   chapters.clear();
   await FirebaseFirestore.instance
       .collection('chapters')
       .withConverter(
-        fromFirestore: (snapshot, _) => Chapter.fromJson(
-          snapshot.data()!,
-          id: snapshot.id,
-          root: root,
-        ),
+        fromFirestore: (snapshot, _) =>
+            Chapter.fromJson(snapshot.data()!, id: snapshot.id),
         toFirestore: (Chapter object, _) => object.toJson(),
       )
       .get()
@@ -39,7 +39,7 @@ Future<void> loadPhrases(Chapter chapter) async {
         fromFirestore: (snapshot, _) => Phrase.fromJson(
           snapshot.data()!,
           id: snapshot.id,
-          root: chapter.directory.path,
+          root: root.path,
         ),
         toFirestore: (Phrase object, _) => object.toJson(),
       )

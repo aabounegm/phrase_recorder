@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_archive/flutter_archive.dart';
 import 'package:phrase_recorder/chapters/chapter.dart';
+import 'package:phrase_recorder/store.dart';
 
 class UploadButton extends StatelessWidget {
   final Chapter chapter;
@@ -53,10 +54,11 @@ class UploadButton extends StatelessWidget {
   }
 
   Future<void> upload() async {
-    final files = chapter.phrases.map((p) => p.file).toList();
-    final zipFile = File('${chapter.directory.path}/all.zip');
+    final files =
+        chapter.phrases.where((p) => p.exists).map((p) => p.file).toList();
+    final zipFile = File('${root.path}/${chapter.id}.zip');
     await ZipFile.createFromFiles(
-      sourceDir: chapter.directory,
+      sourceDir: root,
       files: files,
       zipFile: zipFile,
     );

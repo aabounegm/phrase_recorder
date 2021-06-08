@@ -36,8 +36,11 @@ Future<void> loadPhrases(Chapter chapter) async {
   return await FirebaseFirestore.instance
       .collection('chapters/${chapter.id}/phrases')
       .withConverter(
-        fromFirestore: (snapshot, _) => Phrase.fromJson(snapshot.data()!,
-            id: snapshot.id, root: chapter.directory.path),
+        fromFirestore: (snapshot, _) => Phrase.fromJson(
+          snapshot.data()!,
+          id: snapshot.id,
+          root: chapter.directory.path,
+        ),
         toFirestore: (Phrase object, _) => object.toJson(),
       )
       .get()

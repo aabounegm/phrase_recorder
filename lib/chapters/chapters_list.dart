@@ -17,7 +17,7 @@ class _ChapterListScreenState extends State<ChapterListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chapter list'),
+        title: Text('Chapters'),
       ),
       body: Column(
         children: [
@@ -28,6 +28,7 @@ class _ChapterListScreenState extends State<ChapterListScreen> {
               ),
               controller: _refreshController,
               onRefresh: () => loadChapters().then((_) {
+                setState(() {});
                 _refreshController.refreshCompleted();
               }),
               // onLoading: _onLoading,

@@ -71,13 +71,7 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                       ? phrases.where((p) => p.exists)
                       : phrases)
                     ListTile(
-                      title: Text(
-                        p.text,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      title: Text(p.text),
                       trailing:
                           p.exists ? Icon(Icons.audiotrack_outlined) : null,
                       onTap: () => setState(() => phrase = p),

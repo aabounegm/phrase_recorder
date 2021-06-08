@@ -16,9 +16,10 @@ class PhraseListScreen extends StatefulWidget {
 
 class _PhraseListScreenState extends State<PhraseListScreen> {
   final RefreshController _refreshController = RefreshController();
-  List<Phrase> get phrases => widget.chapter.phrases;
   Phrase? phrase;
-  bool recordedOnly = false;
+
+  List<Phrase> get phrases => widget.chapter.phrases;
+  int get recorded => widget.chapter.phrases.where((p) => p.exists).length;
 
   void changePhrase(int delta) {
     final i = phrase == null ? -1 : phrases.indexOf(phrase!);
@@ -33,16 +34,25 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Phrase list'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.chapter.title),
+            if (widget.chapter.subtitle != null)
+              Text(
+                widget.chapter.subtitle!,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black54,
+                ),
+              ),
+          ],
+        ),
         actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                recordedOnly = !recordedOnly;
-              });
-            },
-            icon: Icon(Icons.library_music_outlined),
-            color: recordedOnly ? Colors.blue : Colors.black,
+          Center(
+            child: Text(
+              '$recorded / ${phrases.length}',
+            ),
           ),
           UploadButton(chapter: widget.chapter),
           SizedBox(width: 4),
@@ -65,11 +75,10 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
               // onLoading: _onLoading,
               child: ListView(
                 children: [
+                  Divider(height: 0),
                   if (phrases.isEmpty && !_refreshController.isRefresh)
                     Center(child: Text('No phrases yet')),
-                  for (final p in recordedOnly
-                      ? phrases.where((p) => p.exists)
-                      : phrases)
+                  for (final p in phrases)
                     ListTile(
                       title: Text(p.text),
                       trailing:

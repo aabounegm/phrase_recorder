@@ -15,17 +15,10 @@ class PhraseListScreen extends StatefulWidget {
 }
 
 class _PhraseListScreenState extends State<PhraseListScreen> {
-  final RefreshController _refreshController = RefreshController(
-    initialRefresh: true,
-  );
+  final RefreshController _refreshController = RefreshController();
   List<Phrase> get phrases => widget.chapter.phrases;
   Phrase? phrase;
   bool recordedOnly = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void changePhrase(int delta) {
     final i = phrase == null ? -1 : phrases.indexOf(phrase!);

@@ -13,9 +13,9 @@ class Chapter {
     required this.id,
     required this.title,
     required this.subtitle,
-    required String filesRoot,
+    required String root,
   }) {
-    directory = Directory('$filesRoot/$id');
+    directory = Directory('$root/$id');
     directory.create(recursive: true);
   }
 
@@ -27,7 +27,7 @@ class Chapter {
           id: id,
           title: json['title'],
           subtitle: json['subtitle'],
-          filesRoot: root,
+          root: root,
         );
 
   Map<String, dynamic> toJson() {

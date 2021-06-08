@@ -78,7 +78,6 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(p.id),
                       trailing:
                           p.exists ? Icon(Icons.audiotrack_outlined) : null,
                       onTap: () => setState(() => phrase = p),

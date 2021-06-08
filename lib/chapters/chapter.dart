@@ -7,6 +7,7 @@ class Chapter {
   final String? subtitle;
   final List<Phrase> phrases = [];
   late final Directory directory;
+  int get recorded => phrases.where((p) => p.exists).length;
 
   Chapter({
     required this.id,

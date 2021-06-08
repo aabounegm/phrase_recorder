@@ -42,11 +42,12 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
 
   @override
   void dispose() {
-    togglePlayback(false);
-    player.closeAudioSession();
-    toggleRecording(false);
-    recorder.stopRecorder();
-    recorder.closeAudioSession();
+    player
+      ..stopPlayer()
+      ..closeAudioSession();
+    recorder
+      ..stopRecorder()
+      ..closeAudioSession();
     super.dispose();
   }
 

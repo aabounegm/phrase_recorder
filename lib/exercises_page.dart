@@ -19,7 +19,6 @@ class Transition {
   bool evaluate(Map<String, String> state) {
     final value = state[valueKey];
     if (value == null || check == null) return true;
-
     switch (condition) {
       case TransitionCondition.Equals:
         return value == check;
@@ -40,15 +39,14 @@ class ScenarioNode {
     this.transitions,
   });
 
-  String? nextNode(Map<String, String> state) {
-    if (transitions == null) return null;
-    final id = transitions!
-        .firstWhere(
-          (t) => t.evaluate(state),
-          orElse: () => Transition(''),
-        )
-        .nodeId;
-    return id.isEmpty ? null : id;
+  String nextNode(Map<String, String> state) {
+    return transitions
+            ?.firstWhere(
+              (t) => t.evaluate(state),
+              orElse: () => Transition(''),
+            )
+            .nodeId ??
+        '';
   }
 }
 
@@ -85,7 +83,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
       result: 'product',
       transitions: [
         Transition(
-          'milk',
+          'end',
           valueKey: 'product',
           check: 'milk',
         ),
@@ -154,10 +152,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
                   ? (s) {
                       if (n.result != null) state[n.result!] = s.join(', ');
                       final next = n.nextNode(state);
-                      if (next != null) {
-                        scenario.current = next;
-                        if (scenario.node != null) progress.add(scenario.node!);
-                      }
+                      scenario.current = next;
+                      if (scenario.node != null) progress.add(scenario.node!);
+                      setState(() {});
                     }
                   : null,
             ),

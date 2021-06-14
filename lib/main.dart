@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/chapters/chapters_list.dart';
 
+import 'exercises_page.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(PhrasesApp());
@@ -31,7 +33,7 @@ class PhrasesApp extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
             ),
           ),
-          home: ChapterListScreen(),
+          home: ExercisesPage(),
         );
       },
     );

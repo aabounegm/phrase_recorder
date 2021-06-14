@@ -101,16 +101,28 @@ class _ExercisesPageState extends State<ExercisesPage> {
     ),
     'bread': ScenarioNode(
       ChoiceExerciseData(
-        'You enter the shop.',
-        question: 'What do you need to buy?',
+        'You are buying bread.',
+        question: 'Which type do you want?',
         options: {
           'white': 'White',
           'brown': 'Brown',
         },
+        multichoice: true,
       ),
       result: 'bread',
       transitions: [
-        Transition('whiteBread'),
+        Transition(
+          'whiteBread',
+          valueKey: 'bread',
+          check: 'white',
+          condition: TransitionCondition.Contains,
+        ),
+        Transition(
+          'brownBread',
+          valueKey: 'bread',
+          check: 'brown',
+          condition: TransitionCondition.Contains,
+        ),
       ],
     ),
     'whiteBread': ScenarioNode(

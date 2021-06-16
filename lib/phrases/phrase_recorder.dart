@@ -27,17 +27,14 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
   bool initialized = false;
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
-    Permission.microphone
-        .request()
-        .then((_) => recorder.openAudioSession())
-        .then((_) => player.openAudioSession())
-        .then(
-          (_) => setState(() {
-            initialized = true;
-          }),
-        );
+    await Permission.microphone.request();
+    await recorder.openAudioSession();
+    await player.openAudioSession();
+    setState(() {
+      initialized = true;
+    });
   }
 
   @override

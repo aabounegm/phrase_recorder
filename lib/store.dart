@@ -13,6 +13,8 @@ Future<void> loadChapters() async {
     (r) => Directory('${r.path}/recordings'),
   );
 
+  await root!.create(recursive: true);
+
   chapters.clear();
   await FirebaseFirestore.instance
       .collection('chapters')

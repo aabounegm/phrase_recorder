@@ -41,13 +41,11 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
   }
 
   @override
-  void dispose() {
-    player
-      ..stopPlayer()
-      ..closeAudioSession();
-    recorder
-      ..stopRecorder()
-      ..closeAudioSession();
+  Future<void> dispose() async {
+    await player.stopPlayer();
+    await player.closeAudioSession();
+    await recorder.stopRecorder();
+    await recorder.closeAudioSession();
     super.dispose();
   }
 

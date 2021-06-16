@@ -13,6 +13,8 @@ Future<void> loadChapters() async {
     (r) => Directory('${r.path}/recordings'),
   );
 
+  await root!.create(recursive: true);
+
   chapters.clear();
   await FirebaseFirestore.instance
       .collection('chapters')
@@ -47,6 +49,7 @@ Future<void> loadPhrases(Chapter chapter) async {
       .then((d) {
     chapter.phrases
       ..clear()
-      ..addAll(d.docs.map((p) => p.data()));
+      ..addAll(d.docs.map((p) => p.data()))
+      ..sort((a, b) => a.index.compareTo(b.index));
   });
 }

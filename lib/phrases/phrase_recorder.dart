@@ -9,12 +9,16 @@ class PhraseRecorder extends StatefulWidget {
   final void Function() onUpdate;
   final void Function()? moveNext;
   final void Function()? movePrev;
+  final bool autoNext;
+  final bool autoPlay;
 
   PhraseRecorder(
     this.phrase, {
     required this.onUpdate,
     this.moveNext,
     this.movePrev,
+    this.autoNext = false,
+    this.autoPlay = false,
   });
 
   @override
@@ -27,38 +31,39 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
   bool initialized = false;
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    await Permission.microphone.request();
-    await recorder.openAudioSession();
-    await player.openAudioSession();
-    setState(() {
-      initialized = true;
+    Permission.microphone.request().then((_) async {
+      await recorder.openAudioSession();
+      await player.openAudioSession();
+      setState(() {
+        initialized = true;
+      });
     });
   }
 
   @override
-  Future<void> dispose() async {
-    await player.stopPlayer();
-    await player.closeAudioSession();
-    await recorder.stopRecorder();
-    await recorder.closeAudioSession();
-    super.dispose();
+  void dispose() {
+    player.stopPlayer().then((_) async {
+      await player.closeAudioSession();
+      await recorder.stopRecorder();
+      await recorder.closeAudioSession();
+      super.dispose();
+    });
   }
 
-  void toggleRecording(bool? recording) {
+  Future<void> toggleRecording(bool? recording) async {
     recording ??= !recorder.isRecording;
     if (recording) {
-      recorder.startRecorder(toFile: widget.phrase.file.path).then((_) {
-        Vibration.vibrate(duration: 100);
-        setState(() {});
-      });
+      await recorder.startRecorder(toFile: widget.phrase.file.path);
+      await Vibration.vibrate(duration: 100);
+      setState(() {});
     } else {
-      recorder.stopRecorder().then((_) {
-        widget.onUpdate();
-        Vibration.vibrate(duration: 100);
-        togglePlayback(true);
-      });
+      await recorder.stopRecorder();
+      widget.onUpdate();
+      await Vibration.vibrate(duration: 100);
+      await togglePlayback(widget.autoPlay);
+      if (widget.autoNext) widget.moveNext?.call();
     }
   }
 
@@ -118,7 +123,7 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(32),
+          top: Radius.circular(16),
           bottom: Radius.zero,
         ),
         boxShadow: [

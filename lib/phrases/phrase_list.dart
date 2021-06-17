@@ -21,6 +21,9 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
   List<Phrase> get phrases => widget.chapter.phrases;
   int get recorded => widget.chapter.phrases.where((p) => p.exists).length;
 
+  bool autoPlay = false;
+  bool autoNext = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,25 +43,21 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.chapter.title),
-            if (widget.chapter.subtitle != null)
-              Text(
-                widget.chapter.subtitle!,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black54,
-                ),
-              ),
-          ],
+        title: Text(
+          '$recorded / ${phrases.length}',
         ),
         actions: [
-          Center(
-            child: Text(
-              '$recorded / ${phrases.length}',
-            ),
+          IconButton(
+            onPressed: () => setState(() {
+              autoPlay = !autoPlay;
+            }),
+            icon: Icon(Icons.play_circle_outline_outlined),
+          ),
+          IconButton(
+            onPressed: () => setState(() {
+              autoNext = !autoNext;
+            }),
+            icon: Icon(Icons.skip_next_outlined),
           ),
           UploadButton(chapter: widget.chapter),
           SizedBox(width: 4),
@@ -81,9 +80,17 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
               // onLoading: _onLoading,
               child: ListView(
                 children: [
-                  Divider(height: 0),
+                  ListTile(
+                    leading: Icon(Icons.info_outline),
+                    title: Text(widget.chapter.title),
+                    subtitle: widget.chapter.subtitle == null
+                        ? null
+                        : Text(widget.chapter.subtitle!),
+                  ),
                   if (phrases.isEmpty && !_refreshController.isRefresh)
-                    Center(child: Text('No phrases yet')),
+                    Center(child: Text('No phrases yet'))
+                  else
+                    Divider(height: 0),
                   for (final p in phrases)
                     ListTile(
                       title: Text(p.text),
@@ -104,6 +111,8 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                   ),
               movePrev: () => changePhrase(-1),
               moveNext: () => changePhrase(1),
+              autoNext: autoNext,
+              autoPlay: autoPlay,
             ),
         ],
       ),

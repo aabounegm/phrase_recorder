@@ -47,7 +47,10 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
       file: file,
       whenFinished: () {
         setState(() {});
-        if (autoNext) widget.moveNext?.call();
+        if (autoNext && widget.moveNext != null) {
+          widget.moveNext!();
+          setPlaying(true, autoNext: widget.autoNext);
+        }
       },
     );
     setState(() {});

@@ -172,7 +172,9 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
                 ),
                 iconSize: 32,
                 color: Colors.black,
-                onPressed: widget.phrase.exists ? () => setPlaying(null) : null,
+                onPressed: widget.phrase.exists
+                    ? () => setPlaying(null, autoNext: widget.autoNext)
+                    : null,
                 tooltip: SoundManager.player.isPlaying
                     ? 'Stop playback'
                     : 'Replay recording',

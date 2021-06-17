@@ -4,6 +4,7 @@ import 'package:phrase_recorder/phrases/phrase.dart';
 import 'package:phrase_recorder/phrases/sound_manager.dart';
 import 'package:phrase_recorder/store.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'phrase_recorder.dart';
 import 'upload_button.dart';
 
@@ -30,6 +31,13 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
     super.initState();
     phrase = phrases.first;
     SoundManager.init();
+
+    SharedPreferences.getInstance().then(
+      (prefs) => setState(() {
+        autoPlay = prefs.getBool('autoPlay') ?? false;
+        autoNext = prefs.getBool('autoNext') ?? false;
+      }),
+    );
   }
 
   @override
@@ -64,9 +72,14 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () => setState(() {
-              autoPlay = !autoPlay;
-            }),
+            onPressed: () {
+              setState(() {
+                autoPlay = !autoPlay;
+              });
+              SharedPreferences.getInstance().then(
+                (prefs) => prefs.setBool('autoPlay', autoPlay),
+              );
+            },
             icon: Icon(
               Icons.play_circle_outline_outlined,
               color: autoPlay ? Colors.blue : null,
@@ -74,9 +87,14 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
             tooltip: 'Replay after recording',
           ),
           IconButton(
-            onPressed: () => setState(() {
-              autoNext = !autoNext;
-            }),
+            onPressed: () {
+              setState(() {
+                autoNext = !autoNext;
+              });
+              SharedPreferences.getInstance().then(
+                (prefs) => prefs.setBool('autoNext', autoNext),
+              );
+            },
             icon: Icon(
               Icons.skip_next_outlined,
               color: autoNext ? Colors.blue : null,

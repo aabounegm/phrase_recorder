@@ -32,6 +32,7 @@ dependencies:
   flutter_archive: ^3.0.0
   vibration: ^1.7.4-nullsafety.0
   pull_to_refresh: ^2.0.0
+  shared_preferences: ^2.0.6
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/chapters/chapter.dart';
 import 'package:phrase_recorder/phrases/phrase.dart';
+import 'package:phrase_recorder/phrases/sound_manager.dart';
 import 'package:phrase_recorder/store.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'phrase_recorder.dart';
@@ -28,12 +29,20 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
   void initState() {
     super.initState();
     phrase = phrases.first;
+    SoundManager.init();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    SoundManager.dispose();
   }
 
   void changePhrase(int delta) {
     final i = phrase == null ? -1 : phrases.indexOf(phrase!);
     final l = phrases.length;
     final j = ((i + delta) + l) % l;
+    SoundManager.stop();
     setState(() {
       phrase = phrases[j];
     });
@@ -41,6 +50,13 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!SoundManager.initialized) {
+      return Material(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -104,7 +120,12 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
                       title: Text(p.text),
                       trailing:
                           p.exists ? Icon(Icons.audiotrack_outlined) : null,
-                      onTap: () => setState(() => phrase = p),
+                      onTap: () {
+                        SoundManager.stop();
+                        setState(() {
+                          phrase = p;
+                        });
+                      },
                       selected: phrase == p,
                     )
                 ],

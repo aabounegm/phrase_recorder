@@ -51,13 +51,21 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
             onPressed: () => setState(() {
               autoPlay = !autoPlay;
             }),
-            icon: Icon(Icons.play_circle_outline_outlined),
+            icon: Icon(
+              Icons.play_circle_outline_outlined,
+              color: autoPlay ? Colors.blue : null,
+            ),
+            tooltip: 'Replay after recording',
           ),
           IconButton(
             onPressed: () => setState(() {
               autoNext = !autoNext;
             }),
-            icon: Icon(Icons.skip_next_outlined),
+            icon: Icon(
+              Icons.skip_next_outlined,
+              color: autoNext ? Colors.blue : null,
+            ),
+            tooltip: 'Select next after recording',
           ),
           UploadButton(chapter: widget.chapter),
           SizedBox(width: 4),

@@ -56,12 +56,12 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
     recording ??= !recorder.isRecording;
     if (recording) {
       await recorder.startRecorder(toFile: widget.phrase.file.path);
-      await Vibration.vibrate(duration: 100);
+      await Vibration.vibrate(duration: 50);
       setState(() {});
     } else {
       await recorder.stopRecorder();
       widget.onUpdate();
-      await Vibration.vibrate(duration: 100);
+      await Vibration.vibrate(duration: 50);
       if (widget.autoPlay) {
         await togglePlayback(true, autoNext: widget.autoNext);
       } else if (widget.autoNext) widget.moveNext?.call();

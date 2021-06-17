@@ -49,7 +49,10 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
         setState(() {});
         if (autoNext && widget.moveNext != null) {
           widget.moveNext!();
-          setPlaying(true, autoNext: widget.autoNext);
+          Future.delayed(
+            Duration(milliseconds: 50),
+            () => setPlaying(true, autoNext: widget.autoNext),
+          );
         }
       },
     );

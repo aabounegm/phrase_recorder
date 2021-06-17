@@ -113,14 +113,16 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
           ),
           if (phrase != null)
             PhraseRecorder(
-              phrase as Phrase,
-              onUpdate: () => phrase!.checkIfExists().then(
-                    (_) => setState(() {}),
-                  ),
+              phrase!,
+              onUpdate: () async {
+                await phrase!.checkIfExists();
+                setState(() {});
+              },
               movePrev: () => changePhrase(-1),
               moveNext: () => changePhrase(1),
               autoNext: autoNext,
               autoPlay: autoPlay,
+              key: ValueKey(phrase!.id),
             ),
         ],
       ),

@@ -19,7 +19,8 @@ class PhraseRecorder extends StatefulWidget {
     this.movePrev,
     this.autoNext = false,
     this.autoPlay = false,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   _PhraseRecorderState createState() => _PhraseRecorderState();
@@ -33,7 +34,8 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
   @override
   void initState() {
     super.initState();
-    Permission.microphone.request().then((_) async {
+    Future.sync(() async {
+      await Permission.microphone.request();
       await recorder.openAudioSession();
       await player.openAudioSession();
       setState(() {
@@ -44,7 +46,8 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
 
   @override
   void dispose() {
-    player.stopPlayer().then((_) async {
+    Future.sync(() async {
+      await player.stopPlayer();
       await player.closeAudioSession();
       await recorder.stopRecorder();
       await recorder.closeAudioSession();

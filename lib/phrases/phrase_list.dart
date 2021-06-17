@@ -143,7 +143,6 @@ class _PhraseListScreenState extends State<PhraseListScreen> {
               moveNext: () => changePhrase(1),
               autoNext: autoNext,
               autoPlay: autoPlay,
-              key: ValueKey(phrase!.id),
             ),
         ],
       ),

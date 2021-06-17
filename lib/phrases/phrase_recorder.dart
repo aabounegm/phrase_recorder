@@ -17,8 +17,7 @@ class PhraseRecorder extends StatefulWidget {
     this.movePrev,
     this.autoNext = false,
     this.autoPlay = false,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   _PhraseRecorderState createState() => _PhraseRecorderState();

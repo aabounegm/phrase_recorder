@@ -62,17 +62,24 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
       await recorder.stopRecorder();
       widget.onUpdate();
       await Vibration.vibrate(duration: 100);
-      await togglePlayback(widget.autoPlay);
-      if (widget.autoNext) widget.moveNext?.call();
+      if (widget.autoPlay) {
+        await togglePlayback(true, autoNext: widget.autoNext);
+      } else if (widget.autoNext) widget.moveNext?.call();
     }
   }
 
-  Future<void> togglePlayback(bool? playing) async {
+  Future<void> togglePlayback(
+    bool? playing, {
+    bool autoNext = false,
+  }) async {
     playing ??= !player.isPlaying;
     if (playing) {
       await player.startPlayer(
         fromURI: widget.phrase.file.path,
-        whenFinished: () => setState(() {}),
+        whenFinished: () {
+          setState(() {});
+          if (autoNext) widget.moveNext?.call();
+        },
       );
     } else {
       await player.stopPlayer();

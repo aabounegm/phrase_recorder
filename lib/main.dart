@@ -25,13 +25,6 @@ class PhrasesApp extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
             ),
           ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            accentColor: Colors.grey,
-            cardTheme: CardTheme(
-              clipBehavior: Clip.antiAlias,
-            ),
-          ),
           home: ExercisesPage(),
         );
       },

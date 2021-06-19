@@ -1,66 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/exercises/choice_exercise.dart';
-
-enum TransitionCondition { Equals, Contains }
-
-class Transition {
-  final String nodeId;
-  final String? valueKey;
-  final String? check;
-  final TransitionCondition condition;
-
-  Transition(
-    this.nodeId, {
-    this.valueKey,
-    this.check,
-    this.condition = TransitionCondition.Equals,
-  });
-
-  bool evaluate(Map<String, String> state) {
-    final value = state[valueKey];
-    if (value == null || check == null) return true;
-    switch (condition) {
-      case TransitionCondition.Equals:
-        return value == check;
-      case TransitionCondition.Contains:
-        return value.contains(check!);
-    }
-  }
-}
-
-class ScenarioNode {
-  final ChoiceExerciseData exercise;
-  final String? result;
-  final List<Transition>? transitions;
-
-  const ScenarioNode(
-    this.exercise, {
-    this.result,
-    this.transitions,
-  });
-
-  String nextNode(Map<String, String> state) {
-    return transitions
-            ?.firstWhere(
-              (t) => t.evaluate(state),
-              orElse: () => Transition(''),
-            )
-            .nodeId ??
-        '';
-  }
-}
-
-class Scenario {
-  String current;
-  final Map<String, ScenarioNode> nodes;
-
-  ScenarioNode? get node => nodes[current];
-
-  Scenario(
-    this.nodes, {
-    this.current = 'start',
-  });
-}
+import 'package:phrase_recorder/exercises/choice/choice_card_widget.dart';
+import 'exercises/scenario.dart';
 
 class ExercisesPage extends StatefulWidget {
   @override

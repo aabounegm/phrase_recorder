@@ -2,18 +2,18 @@ import 'package:phrase_recorder/exercises/scenario_node.dart';
 import 'package:phrase_recorder/exercises/transition.dart';
 
 class Scenario {
+  int _score = 0;
+  int get score => _score;
+
   late ScenarioNode _node;
   ScenarioNode get node => _node;
+  bool get finished => node.outcome != null;
 
   final _state = <String, Set<String>>{};
-  bool get isReady {
-    if (node.outcome != null) return false;
+  bool get ready {
+    if (finished) return false;
     if (node.state == null) return true;
     return _state[node.state]?.isNotEmpty ?? false;
-  }
-
-  bool get isEnd {
-    return node.transitions?.isEmpty ?? true;
   }
 
   void setState(Set<String> state) {
@@ -37,6 +37,7 @@ class Scenario {
 
     _node = node;
     progress.add(this.node);
+    _score += transition!.score;
   }
 
   Scenario(this.nodes) {

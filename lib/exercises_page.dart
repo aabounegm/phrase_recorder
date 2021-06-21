@@ -44,7 +44,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
         ),
         state: 'bread',
         transitions: [
-          Transition('whiteBread', check: 'bread', value: 'white'),
+          Transition('whiteBread', check: 'bread', value: 'white', score: 1),
           Transition('brownBread', check: 'bread', value: 'brown'),
         ],
       ),
@@ -65,7 +65,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
         outcome: 'win',
       ),
       'lose': ScenarioNode(
-        text: 'You lost.',
+        text: "You don't need onion.",
         outcome: 'loss',
       ),
     },
@@ -82,7 +82,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
           for (final n in scenario.progress)
             ScenarioNodeCard(
               node: n,
-              onDone: scenario.node == n && scenario.isReady
+              onDone: scenario.node == n && scenario.ready
                   ? () => setState(() => scenario.moveNext())
                   : null,
               child: n.exercise == null
@@ -93,7 +93,31 @@ class _ExercisesPageState extends State<ExercisesPage> {
                           ? (s) => setState(() => scenario.setState(s))
                           : null,
                     ),
+            ),
+          if (scenario.finished) ...[
+            if (scenario.node.outcome == 'win')
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                  child: Text('Score: ${scenario.score}'),
+                ),
+              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ExercisesPage(),
+                    ),
+                  ),
+                  icon: Icon(Icons.restart_alt_outlined),
+                  label: Text('Restart'),
+                ),
+              ],
             )
+          ],
         ],
       ),
     );

@@ -1,13 +1,13 @@
 class Transition {
   final String target;
-  final int? score;
+  final int score;
   final String? check;
   final String filter;
   final String? value;
 
   const Transition(
     this.target, {
-    this.score,
+    this.score = 0,
     this.check,
     this.filter = 'equals',
     this.value,

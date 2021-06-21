@@ -1,7 +1,7 @@
-import 'package:phrase_recorder/exercises/transition.dart';
+import 'package:phrase_recorder/scenario/transition.dart';
 import 'package:phrase_recorder/utils.dart';
 
-class ScenarioNode<T> {
+class Node<T> {
   final String text;
   final String? question;
   final String? state;
@@ -10,7 +10,7 @@ class ScenarioNode<T> {
   final T? exercise;
   final List<Transition>? transitions;
 
-  ScenarioNode({
+  Node({
     required this.text,
     this.question,
     this.state,
@@ -20,7 +20,7 @@ class ScenarioNode<T> {
     this.outcome,
   });
 
-  ScenarioNode.fromJSON(
+  Node.fromJSON(
     Map<String, dynamic> json, {
     required T exercise,
   }) : this(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/exercises/scenario_node.dart';
+import 'package:phrase_recorder/scenario/node.dart';
 
-class ScenarioNodeCard extends StatelessWidget {
-  final ScenarioNode node;
+class NodeCard extends StatelessWidget {
+  final Node node;
   final Function()? onDone;
   final Widget? child;
 
-  const ScenarioNodeCard({
+  const NodeCard({
     required this.node,
     required this.child,
     this.onDone,

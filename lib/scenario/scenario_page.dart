@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/exercises/choice/choice_card_widget.dart';
-import 'package:phrase_recorder/exercises/choice/choice_exercise.dart';
-import 'package:phrase_recorder/exercises/scenario_node.dart';
-import 'package:phrase_recorder/exercises/scenario_node_card.dart';
-import 'package:phrase_recorder/exercises/transition.dart';
-import 'exercises/scenario.dart';
+import 'package:phrase_recorder/scenario/choice/choice_card.dart';
+import 'package:phrase_recorder/scenario/choice/choice_exercise.dart';
+import 'package:phrase_recorder/scenario/node.dart';
+import 'package:phrase_recorder/scenario/node_card.dart';
+import 'package:phrase_recorder/scenario/transition.dart';
+import 'scenario.dart';
 
-class ExercisesPage extends StatefulWidget {
+class ScenarioPage extends StatefulWidget {
   @override
-  _ExercisesPageState createState() => _ExercisesPageState();
+  _ScenarioPageState createState() => _ScenarioPageState();
 }
 
-class _ExercisesPageState extends State<ExercisesPage> {
+class _ScenarioPageState extends State<ScenarioPage> {
   final scenario = Scenario(
     {
-      'start': ScenarioNode(
+      'start': Node(
         text: 'You enter the shop.',
         question: 'What do you need to buy?',
         type: 'choice',
@@ -32,7 +32,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
           Transition('lose', check: 'product', value: 'onion'),
         ],
       ),
-      'bread': ScenarioNode(
+      'bread': Node(
         text: 'You are buying bread.',
         question: 'Which type do you want?',
         type: 'choice',
@@ -48,23 +48,23 @@ class _ExercisesPageState extends State<ExercisesPage> {
           Transition('brownBread', check: 'bread', value: 'brown'),
         ],
       ),
-      'whiteBread': ScenarioNode(
+      'whiteBread': Node(
         text: 'You bought white bread.',
         transitions: [
           Transition('end'),
         ],
       ),
-      'brownBread': ScenarioNode(
+      'brownBread': Node(
         text: 'You bought brown bread.',
         transitions: [
           Transition('end'),
         ],
       ),
-      'end': ScenarioNode(
+      'end': Node(
         text: 'Nice.',
         outcome: 'win',
       ),
-      'lose': ScenarioNode(
+      'lose': Node(
         text: "You don't need onion.",
         outcome: 'loss',
       ),
@@ -80,7 +80,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
       body: ListView(
         children: [
           for (final n in scenario.progress)
-            ScenarioNodeCard(
+            NodeCard(
               node: n,
               onDone: scenario.node == n && scenario.ready
                   ? () => setState(() => scenario.moveNext())
@@ -109,7 +109,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                   onPressed: () => Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ExercisesPage(),
+                      builder: (_) => ScenarioPage(),
                     ),
                   ),
                   icon: Icon(Icons.restart_alt_outlined),

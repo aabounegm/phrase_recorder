@@ -1,12 +1,12 @@
-import 'package:phrase_recorder/exercises/scenario_node.dart';
-import 'package:phrase_recorder/exercises/transition.dart';
+import 'package:phrase_recorder/scenario/node.dart';
+import 'package:phrase_recorder/scenario/transition.dart';
 
 class Scenario {
   int _score = 0;
   int get score => _score;
 
-  late ScenarioNode _node;
-  ScenarioNode get node => _node;
+  late Node _node;
+  Node get node => _node;
   bool get finished => node.outcome != null;
 
   final _state = <String, Set<String>>{};
@@ -20,8 +20,8 @@ class Scenario {
     if (node.state != null) _state[node.state!] = state;
   }
 
-  final Map<String, ScenarioNode> nodes;
-  final List<ScenarioNode> progress = [];
+  final Map<String, Node> nodes;
+  final List<Node> progress = [];
 
   void moveNext() {
     final transition = this.node.transitions?.firstWhere(

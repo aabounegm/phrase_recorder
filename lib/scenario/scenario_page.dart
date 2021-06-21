@@ -29,7 +29,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
         transitions: [
           Transition('end', check: 'product', value: 'milk'),
           Transition('bread', check: 'product', value: 'bread'),
-          Transition('lose', check: 'product', value: 'onion'),
+          Transition('onion', check: 'product', value: 'onion'),
         ],
       ),
       'bread': Node(
@@ -45,30 +45,30 @@ class _ScenarioPageState extends State<ScenarioPage> {
         state: 'bread',
         transitions: [
           Transition('whiteBread', check: 'bread', value: 'white', score: 1),
-          Transition('brownBread', check: 'bread', value: 'brown'),
+          Transition('brownBread', check: 'bread', value: 'brown', score: -1),
         ],
       ),
       'whiteBread': Node(
         text: 'You bought white bread.',
         transitions: [
-          Transition('end'),
+          Transition('win'),
         ],
       ),
       'brownBread': Node(
         text: 'You bought brown bread.',
         transitions: [
-          Transition('end'),
+          Transition('win'),
         ],
       ),
-      'end': Node(
+      'win': Node(
         text: 'Nice.',
         outcome: 'win',
       ),
-      'lose': Node(
+      'onion': Node(
         text: "You don't need onion.",
         outcome: 'loss',
       ),
-      'negScore': Node(
+      'loss': Node(
         text: "You don't need onion.",
         outcome: 'loss',
       ),

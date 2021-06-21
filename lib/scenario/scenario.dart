@@ -32,12 +32,13 @@ class Scenario {
     final id = transition?.target ?? '';
     if (id.isEmpty) return;
 
-    final node = nodes[transition?.target ?? ''];
+    _score += transition!.score;
+
+    final node = _score.isNegative ? nodes['loss'] : nodes[transition.target];
     if (node == null) return;
 
     _node = node;
     progress.add(this.node);
-    _score += transition!.score;
   }
 
   Scenario(

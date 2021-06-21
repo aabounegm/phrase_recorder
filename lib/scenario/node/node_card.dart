@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/scenario/node.dart';
+import 'node.dart';
 
 class NodeCard extends StatelessWidget {
   final Node node;

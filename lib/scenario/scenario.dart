@@ -1,5 +1,5 @@
-import 'package:phrase_recorder/scenario/node.dart';
 import 'package:phrase_recorder/scenario/transition.dart';
+import 'node/node.dart';
 
 class Scenario {
   int _score = 0;

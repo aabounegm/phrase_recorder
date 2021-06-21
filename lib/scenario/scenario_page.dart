@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/scenario/choice/choice_card.dart';
 import 'package:phrase_recorder/scenario/choice/choice_exercise.dart';
-import 'package:phrase_recorder/scenario/node.dart';
-import 'package:phrase_recorder/scenario/node_card.dart';
 import 'package:phrase_recorder/scenario/transition.dart';
+import 'node/node.dart';
+import 'node/node_card.dart';
 import 'scenario.dart';
 
 class ScenarioPage extends StatefulWidget {

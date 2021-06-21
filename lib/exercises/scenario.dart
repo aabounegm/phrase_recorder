@@ -7,7 +7,13 @@ class Scenario {
 
   final _state = <String, Set<String>>{};
   bool get isReady {
-    return _state[node.state ?? '']?.isNotEmpty ?? false;
+    if (node.outcome != null) return false;
+    if (node.state == null) return true;
+    return _state[node.state]?.isNotEmpty ?? false;
+  }
+
+  bool get isEnd {
+    return node.transitions?.isEmpty ?? true;
   }
 
   void setState(Set<String> state) {
@@ -33,11 +39,8 @@ class Scenario {
     progress.add(this.node);
   }
 
-  Scenario(
-    this.nodes, {
-    starting = 'start',
-  }) {
-    _node = nodes[starting]!;
+  Scenario(this.nodes) {
+    _node = nodes['start']!;
     progress.add(node);
   }
 }

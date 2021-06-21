@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/exercises/scenario_node.dart';
 
-class ScenarioNodeCard extends StatefulWidget {
+class ScenarioNodeCard extends StatelessWidget {
   final ScenarioNode node;
-  final Function? onDone;
+  final Function()? onDone;
   final Widget? child;
 
   const ScenarioNodeCard({
@@ -11,14 +11,6 @@ class ScenarioNodeCard extends StatefulWidget {
     required this.child,
     this.onDone,
   });
-
-  @override
-  _ScenarioNodeCardState createState() => _ScenarioNodeCardState();
-}
-
-class _ScenarioNodeCardState extends State<ScenarioNodeCard> {
-  bool done = false;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -29,30 +21,41 @@ class _ScenarioNodeCardState extends State<ScenarioNodeCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                title: Text(widget.node.text),
-                subtitle: widget.node.question == null
-                    ? null
-                    : Text(widget.node.question!),
+                title: Text(node.text),
+                subtitle: node.question == null ? null : Text(node.question!),
               ),
-              if (widget.child != null) widget.child!,
+              if (child != null) child!,
             ],
           ),
         ),
-        widget.onDone == null || done
-            ? Icon(
-                Icons.expand_more_outlined,
-                color: Colors.black45,
-              )
+        onDone == null
+            ? node.outcome == 'loss'
+                ? Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.mood_bad_outlined,
+                      color: Colors.red,
+                      size: 32,
+                    ),
+                  )
+                : node.outcome == 'win'
+                    ? Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Icon(
+                          Icons.emoji_events_outlined,
+                          color: Colors.blue,
+                          size: 32,
+                        ),
+                      )
+                    : Icon(
+                        Icons.expand_more_outlined,
+                        color: Colors.black45,
+                      )
             : IconButton(
-                onPressed: () {
-                  widget.onDone!();
-                  setState(() {
-                    done = true;
-                  });
-                },
-                icon: Icon(Icons.done),
+                onPressed: onDone,
+                icon: Icon(Icons.arrow_circle_down_outlined),
                 iconSize: 32,
-              ),
+              )
       ],
     );
   }

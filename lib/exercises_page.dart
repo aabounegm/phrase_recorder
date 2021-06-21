@@ -62,9 +62,11 @@ class _ExercisesPageState extends State<ExercisesPage> {
       ),
       'end': ScenarioNode(
         text: 'Nice.',
+        outcome: 'win',
       ),
       'lose': ScenarioNode(
         text: 'You lost.',
+        outcome: 'loss',
       ),
     },
   );

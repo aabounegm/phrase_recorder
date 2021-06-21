@@ -40,7 +40,11 @@ class Scenario {
     _score += transition!.score;
   }
 
-  Scenario(this.nodes) {
+  Scenario(
+    this.nodes, {
+    score = 0,
+  }) {
+    _score = score;
     _node = nodes['start']!;
     progress.add(node);
   }

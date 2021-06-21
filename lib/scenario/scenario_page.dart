@@ -68,7 +68,12 @@ class _ScenarioPageState extends State<ScenarioPage> {
         text: "You don't need onion.",
         outcome: 'loss',
       ),
+      'negScore': Node(
+        text: "You don't need onion.",
+        outcome: 'loss',
+      ),
     },
+    score: 10,
   );
 
   @override

@@ -4,9 +4,9 @@
             "text": "You have entered the shop.",
             "question": "What do you need to buy?",
             "state": "food",
+            "type": "choice",
             "exercise": [
                 {
-                    "type": "choice",
                     "multichoice": false,
                     "options": [
                         {

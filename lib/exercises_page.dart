@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/exercises/choice/choice_card_widget.dart';
+import 'package:phrase_recorder/exercises/choice/choice_exercise.dart';
+import 'package:phrase_recorder/exercises/scenario_node.dart';
+import 'package:phrase_recorder/exercises/scenario_node_card.dart';
+import 'package:phrase_recorder/exercises/transition.dart';
 import 'exercises/scenario.dart';
 
 class ExercisesPage extends StatefulWidget {
@@ -8,78 +12,64 @@ class ExercisesPage extends StatefulWidget {
 }
 
 class _ExercisesPageState extends State<ExercisesPage> {
-  final state = <String, String>{};
-  final scenario = Scenario({
-    'start': ScenarioNode(
-      ChoiceExerciseData(
-        'You enter the shop.',
+  final state = <String, Set<String>>{};
+  final scenario = Scenario(
+    {
+      'start': ScenarioNode(
+        text: 'You enter the shop.',
         question: 'What do you need to buy?',
-        options: {
-          'milk': 'Milk',
-          'bread': 'Bread',
-          'onion': 'Onion',
-        },
+        type: 'choice',
+        exercise: ChoiceExercise(
+          options: [
+            ChoiceOption('milk', 'Milk'),
+            ChoiceOption('bread', 'Bread'),
+            ChoiceOption('onion', 'Onion'),
+          ],
+        ),
+        state: 'product',
+        transitions: [
+          Transition('end', check: 'product', value: 'milk'),
+          Transition('bread', check: 'product', value: 'bread'),
+          Transition('lose', check: 'product', value: 'onion'),
+        ],
       ),
-      result: 'product',
-      transitions: [
-        Transition(
-          'end',
-          valueKey: 'product',
-          check: 'milk',
-        ),
-        Transition(
-          'bread',
-          valueKey: 'product',
-          check: 'bread',
-        ),
-        Transition(
-          'onion',
-          valueKey: 'product',
-          check: 'lose',
-        ),
-      ],
-    ),
-    'bread': ScenarioNode(
-      ChoiceExerciseData(
-        'You are buying bread.',
+      'bread': ScenarioNode(
+        text: 'You are buying bread.',
         question: 'Which type do you want?',
-        options: {
-          'white': 'White',
-          'brown': 'Brown',
-        },
-        multichoice: true,
+        type: 'choice',
+        exercise: ChoiceExercise(
+          options: [
+            ChoiceOption('white', 'White'),
+            ChoiceOption('brown', 'Brown'),
+          ],
+          multichoice: true,
+        ),
+        state: 'bread',
+        transitions: [
+          Transition('whiteBread', check: 'bread', value: 'white'),
+          Transition('brownBread', check: 'bread', value: 'brown'),
+        ],
       ),
-      result: 'bread',
-      transitions: [
-        Transition(
-          'whiteBread',
-          valueKey: 'bread',
-          check: 'white',
-          condition: TransitionCondition.Contains,
-        ),
-        Transition(
-          'brownBread',
-          valueKey: 'bread',
-          check: 'brown',
-          condition: TransitionCondition.Contains,
-        ),
-      ],
-    ),
-    'whiteBread': ScenarioNode(
-      ChoiceExerciseData('You bought white bread.'),
-      transitions: [Transition('end')],
-    ),
-    'brownBread': ScenarioNode(
-      ChoiceExerciseData('You bought brown bread.'),
-      transitions: [Transition('end')],
-    ),
-    'end': ScenarioNode(
-      ChoiceExerciseData('Nice.'),
-    ),
-    'lose': ScenarioNode(
-      ChoiceExerciseData('You lost.'),
-    ),
-  });
+      'whiteBread': ScenarioNode(
+        text: 'You bought white bread.',
+        transitions: [
+          Transition('end'),
+        ],
+      ),
+      'brownBread': ScenarioNode(
+        text: 'You bought brown bread.',
+        transitions: [
+          Transition('end'),
+        ],
+      ),
+      'end': ScenarioNode(
+        text: 'Nice.',
+      ),
+      'lose': ScenarioNode(
+        text: 'You lost.',
+      ),
+    },
+  );
 
   final List<ScenarioNode> progress = [];
 
@@ -98,18 +88,33 @@ class _ExercisesPageState extends State<ExercisesPage> {
       body: ListView(
         children: [
           for (final n in progress)
-            ChoiceExercise(
-              n.exercise,
-              onDone: scenario.node == n
-                  ? (s) {
-                      if (n.result != null) state[n.result!] = s.join(', ');
+            ScenarioNodeCard(
+              node: n,
+              onDone: scenario.node == n &&
+                      (state[n.state ?? '']?.isNotEmpty ?? false)
+                  ? () {
                       final next = n.nextNode(state);
                       scenario.current = next;
-                      if (scenario.node != null) progress.add(scenario.node!);
+                      if (scenario.node != null) {
+                        progress.add(scenario.node!);
+                      }
                       setState(() {});
                     }
                   : null,
-            ),
+              child: ChoiceCard(
+                n.exercise,
+                onChanged: scenario.node == n && n.state != null
+                    ? (s) {
+                        if (s == null) {
+                          state[n.state!]?.clear();
+                        } else {
+                          state[n.state!] = s;
+                        }
+                        setState(() {});
+                      }
+                    : null,
+              ),
+            )
         ],
       ),
     );

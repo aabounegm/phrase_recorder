@@ -1,27 +1,4 @@
-import 'package:phrase_recorder/exercises/choice/choice_card_widget.dart';
-import 'package:phrase_recorder/exercises/transition.dart';
-
-class ScenarioNode {
-  final ChoiceExerciseData exercise;
-  final String? result;
-  final List<Transition>? transitions;
-
-  const ScenarioNode(
-    this.exercise, {
-    this.result,
-    this.transitions,
-  });
-
-  String nextNode(Map<String, Set<String>> state) {
-    return transitions
-            ?.firstWhere(
-              (t) => t.evaluate(state),
-              orElse: () => Transition(target: ''),
-            )
-            .target ??
-        '';
-  }
-}
+import 'package:phrase_recorder/exercises/scenario_node.dart';
 
 class Scenario {
   String current;

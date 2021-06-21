@@ -16,6 +16,7 @@ class ChoiceExercise {
     this.multichoice = false,
   });
 
+  @override
   ChoiceExercise.fromJSON(
     Map<String, dynamic> json,
   ) : this(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'choice/choice_exercise.dart';
 import 'exercises/choice/choice_card.dart';
+import 'exercises/choice/choice_exercise.dart';
 import 'node/node.dart';
 import 'node/node_card.dart';
 import 'scenario.dart';

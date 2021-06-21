@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/scenario/choice/choice_card.dart';
-import 'package:phrase_recorder/scenario/choice/choice_exercise.dart';
-import 'package:phrase_recorder/scenario/transition.dart';
+import 'choice/choice_exercise.dart';
+import 'exercises/choice/choice_card.dart';
 import 'node/node.dart';
 import 'node/node_card.dart';
 import 'scenario.dart';
+import 'transition.dart';
 
 class ScenarioPage extends StatefulWidget {
   @override

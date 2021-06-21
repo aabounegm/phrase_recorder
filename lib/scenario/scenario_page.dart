@@ -95,27 +95,25 @@ class _ScenarioPageState extends State<ScenarioPage> {
                     ),
             ),
           if (scenario.finished) ...[
-            if (scenario.node.outcome == 'win')
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                  child: Text('Score: ${scenario.score}'),
-                ),
+            Center(
+              child: Text(
+                scenario.node.outcome == 'win'
+                    ? 'Score: ${scenario.score}'
+                    : 'End',
               ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ScenarioPage(),
-                    ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: ElevatedButton.icon(
+                onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ScenarioPage(),
                   ),
-                  icon: Icon(Icons.restart_alt_outlined),
-                  label: Text('Restart'),
                 ),
-              ],
+                icon: Icon(Icons.restart_alt_outlined),
+                label: Text('Restart'),
+              ),
             )
           ],
         ],

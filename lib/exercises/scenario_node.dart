@@ -32,12 +32,4 @@ class ScenarioNode<T> {
           ),
           exercise: exercise,
         );
-
-  String nextNode(Map<String, Set<String>> state) {
-    final result = transitions?.firstWhere(
-      (t) => t.evaluate(state),
-      orElse: () => Transition(''),
-    );
-    return result?.target ?? '';
-  }
 }

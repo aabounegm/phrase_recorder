@@ -12,7 +12,6 @@ class ExercisesPage extends StatefulWidget {
 }
 
 class _ExercisesPageState extends State<ExercisesPage> {
-  final state = <String, Set<String>>{};
   final scenario = Scenario(
     {
       'start': ScenarioNode(
@@ -42,7 +41,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
             ChoiceOption('white', 'White'),
             ChoiceOption('brown', 'Brown'),
           ],
-          multichoice: true,
         ),
         state: 'bread',
         transitions: [
@@ -71,14 +69,6 @@ class _ExercisesPageState extends State<ExercisesPage> {
     },
   );
 
-  final List<ScenarioNode> progress = [];
-
-  @override
-  void initState() {
-    super.initState();
-    if (scenario.node != null) progress.add(scenario.node!);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,33 +77,20 @@ class _ExercisesPageState extends State<ExercisesPage> {
       ),
       body: ListView(
         children: [
-          for (final n in progress)
+          for (final n in scenario.progress)
             ScenarioNodeCard(
               node: n,
-              onDone: scenario.node == n &&
-                      (state[n.state ?? '']?.isNotEmpty ?? false)
-                  ? () {
-                      final next = n.nextNode(state);
-                      scenario.current = next;
-                      if (scenario.node != null) {
-                        progress.add(scenario.node!);
-                      }
-                      setState(() {});
-                    }
+              onDone: scenario.node == n && scenario.isReady
+                  ? () => setState(() => scenario.moveNext())
                   : null,
-              child: ChoiceCard(
-                n.exercise,
-                onChanged: scenario.node == n && n.state != null
-                    ? (s) {
-                        if (s == null) {
-                          state[n.state!]?.clear();
-                        } else {
-                          state[n.state!] = s;
-                        }
-                        setState(() {});
-                      }
-                    : null,
-              ),
+              child: n.exercise == null
+                  ? null
+                  : ChoiceCard(
+                      n.exercise,
+                      onChanged: scenario.node == n && n.state != null
+                          ? (s) => setState(() => scenario.setState(s))
+                          : null,
+                    ),
             )
         ],
       ),

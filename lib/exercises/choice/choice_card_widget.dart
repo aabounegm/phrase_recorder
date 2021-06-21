@@ -3,7 +3,7 @@ import 'choice_exercise.dart';
 
 class ChoiceCard extends StatefulWidget {
   final ChoiceExercise exercise;
-  final ValueSetter<Set<String>?>? onChanged;
+  final ValueSetter<Set<String>>? onChanged;
 
   const ChoiceCard(
     this.exercise, {

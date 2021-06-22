@@ -25,54 +25,36 @@ class _ScenarioPageState extends State<ScenarioPage> {
             ChoiceOption('bread', 'Bread'),
             ChoiceOption('onion', 'Onion'),
           ],
+          multichoice: true,
         ),
         state: 'product',
         transitions: [
-          Transition('end', check: 'product', value: 'milk'),
-          Transition('bread', check: 'product', value: 'bread'),
-          Transition('onion', check: 'product', value: 'onion'),
-        ],
-      ),
-      'bread': Node(
-        text: 'You are buying bread.',
-        question: 'Which type do you want?',
-        type: 'order',
-        exercise: ChoiceExercise(
-          options: [
-            ChoiceOption('white', 'White'),
-            ChoiceOption('brown', 'Brown'),
-            ChoiceOption('green', 'Green'),
-          ],
-        ),
-        state: 'bread',
-        transitions: [
           Transition(
-            'whiteBread',
-            check: 'bread',
-            value: 'white,brown,green',
-            score: 1,
+            'win',
+            check: 'product',
+            value: 'milk,bread',
           ),
-          Transition('brownBread', score: -1),
-        ],
-      ),
-      'whiteBread': Node(
-        text: 'You bought white bread.',
-        transitions: [
-          Transition('win'),
-        ],
-      ),
-      'brownBread': Node(
-        text: 'You bought brown bread.',
-        transitions: [
-          Transition('win'),
+          Transition(
+            'partial',
+            check: 'product',
+            filter: 'contains',
+            value: 'bread',
+            score: -1,
+          ),
+          Transition('loss', check: 'product', value: 'onion'),
+          Transition('miss'),
         ],
       ),
       'win': Node(
         text: 'Nice.',
         outcome: 'win',
       ),
-      'onion': Node(
-        text: "You don't need onion.",
+      'partial': Node(
+        text: "You missed something, but it's okay.",
+        outcome: 'win',
+      ),
+      'miss': Node(
+        text: 'You missed something.',
         outcome: 'loss',
       ),
       'loss': Node(
@@ -80,7 +62,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
         outcome: 'loss',
       ),
     },
-    score: 0,
+    score: 1,
   );
 
   @override

@@ -1,45 +1,39 @@
 import 'package:flutter/material.dart';
-import 'choice_exercise.dart';
+import '../choice_exercise.dart';
 
-class ChoiceCard extends StatefulWidget {
+class ChoiceCard extends StatelessWidget {
   final ChoiceExercise exercise;
-  final ValueSetter<Set<String>>? onChanged;
+  final Set<String> state;
+  final Function()? onChanged;
 
   const ChoiceCard(
     this.exercise, {
+    required this.state,
     this.onChanged,
   });
-
-  @override
-  _ChoiceCardState createState() => _ChoiceCardState();
-}
-
-class _ChoiceCardState extends State<ChoiceCard> {
-  late final selected = <String>{};
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final option in widget.exercise.options)
+        for (final option in exercise.options)
           CheckboxListTile(
             title: Text(option.text),
-            value: selected.contains(option.id),
-            onChanged: widget.onChanged == null
+            value: state.contains(option.id),
+            onChanged: onChanged == null
                 ? null
                 : (checked) {
                     if (checked == null) return;
-                    if (!widget.exercise.multichoice) {
-                      selected.clear();
+                    if (!exercise.multichoice) {
+                      state.clear();
                     }
                     if (checked) {
-                      selected.add(option.id);
+                      state.add(option.id);
                     } else {
-                      selected.remove(option.id);
+                      state.remove(option.id);
                     }
-                    if (selected.isNotEmpty) widget.onChanged!(selected);
-                    setState(() {});
+                    onChanged!();
                   },
           ),
       ],

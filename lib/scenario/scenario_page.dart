@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'exercises/choice/choice_card.dart';
-import 'exercises/choice/choice_exercise.dart';
+import 'exercises/choice_exercise.dart';
 import 'node/node.dart';
 import 'node/node_card.dart';
 import 'scenario.dart';
@@ -94,9 +94,9 @@ class _ScenarioPageState extends State<ScenarioPage> {
                   ? null
                   : ChoiceCard(
                       n.exercise,
-                      onChanged: scenario.node == n && n.state != null
-                          ? (s) => setState(() => scenario.setState(s))
-                          : null,
+                      state: scenario.state[n.state]!,
+                      onChanged:
+                          scenario.node == n ? () => setState(() {}) : null,
                     ),
             ),
           if (scenario.finished) ...[

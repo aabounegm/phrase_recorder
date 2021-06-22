@@ -9,23 +9,28 @@ class Scenario {
   Node get node => _node;
   bool get finished => node.outcome != null;
 
-  final _state = <String, Set<String>>{};
+  final state = <String, Set<String>>{};
+
   bool get ready {
     if (finished) return false;
     if (node.state == null) return true;
-    return _state[node.state]?.isNotEmpty ?? false;
-  }
-
-  void setState(Set<String> state) {
-    if (node.state != null) _state[node.state!] = state;
+    return state[node.state]?.isNotEmpty ?? false;
   }
 
   final Map<String, Node> nodes;
   final List<Node> progress = [];
 
+  void _selectNode(Node node) {
+    _node = node;
+    progress.add(node);
+    if (node.state != null && state[node.state] == null) {
+      state[node.state!] = {};
+    }
+  }
+
   void moveNext() {
     final transition = this.node.transitions?.firstWhere(
-          (t) => t.evaluate(_state),
+          (t) => t.evaluate(state),
           orElse: () => Transition(''),
         );
 
@@ -37,8 +42,7 @@ class Scenario {
     final node = _score.isNegative ? nodes['loss'] : nodes[transition.target];
     if (node == null) return;
 
-    _node = node;
-    progress.add(this.node);
+    _selectNode(node);
   }
 
   Scenario(
@@ -46,7 +50,6 @@ class Scenario {
     score = 0,
   }) {
     _score = score;
-    _node = nodes['start']!;
-    progress.add(node);
+    _selectNode(nodes['start']!);
   }
 }

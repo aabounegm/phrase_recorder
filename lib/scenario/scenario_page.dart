@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phrase_recorder/scenario/exercises/order/order_exercise.dart';
 import 'exercises/choice/choice_card.dart';
 import 'exercises/choice_exercise.dart';
 import 'node/node.dart';
@@ -35,17 +36,23 @@ class _ScenarioPageState extends State<ScenarioPage> {
       'bread': Node(
         text: 'You are buying bread.',
         question: 'Which type do you want?',
-        type: 'choice',
+        type: 'order',
         exercise: ChoiceExercise(
           options: [
             ChoiceOption('white', 'White'),
             ChoiceOption('brown', 'Brown'),
+            ChoiceOption('green', 'Green'),
           ],
         ),
         state: 'bread',
         transitions: [
-          Transition('whiteBread', check: 'bread', value: 'white', score: 1),
-          Transition('brownBread', check: 'bread', value: 'brown', score: -1),
+          Transition(
+            'whiteBread',
+            check: 'bread',
+            value: 'white,brown,green',
+            score: 1,
+          ),
+          Transition('brownBread', score: -1),
         ],
       ),
       'whiteBread': Node(
@@ -92,12 +99,25 @@ class _ScenarioPageState extends State<ScenarioPage> {
                   : null,
               child: n.exercise == null
                   ? null
-                  : ChoiceCard(
-                      n.exercise,
-                      state: scenario.state[n.state]!,
-                      onChanged:
-                          scenario.node == n ? () => setState(() {}) : null,
-                    ),
+                  : Builder(builder: (_) {
+                      if (n.type == 'choice') {
+                        return ChoiceCard(
+                          n.exercise,
+                          state: scenario.state[n.state]!,
+                          onChanged:
+                              scenario.node == n ? () => setState(() {}) : null,
+                        );
+                      }
+                      if (n.type == 'order') {
+                        return OrderExercise(
+                          n.exercise,
+                          state: scenario.state[n.state]!,
+                          onChanged:
+                              scenario.node == n ? () => setState(() {}) : null,
+                        );
+                      }
+                      return Offstage();
+                    }),
             ),
           if (scenario.finished) ...[
             Center(

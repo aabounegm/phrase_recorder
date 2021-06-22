@@ -3,7 +3,7 @@ import '../choice_exercise.dart';
 
 class ChoiceCard extends StatelessWidget {
   final ChoiceExercise exercise;
-  final Set<String> state;
+  final List<String> state;
   final Function()? onChanged;
 
   const ChoiceCard(

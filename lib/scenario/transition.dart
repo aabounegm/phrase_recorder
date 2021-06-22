@@ -23,20 +23,31 @@ class Transition {
           value: json['value'],
         );
 
-  bool evaluate(Map<String, Set<String>> state) {
+  bool evaluate(Map<String, List<String>> state) {
     final set = state[check];
     if (set == null || value == null) return true;
 
     final values = value!.split(',');
-    final contains = values.every((v) => set.contains(v));
 
     switch (filter) {
       case 'equals':
-        return values.length == set.length && contains;
+        return _equals(set, values);
       case 'contains':
-        return contains;
+        return _contains(set, values);
       default:
         return false;
     }
+  }
+
+  bool _equals(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  bool _contains(List<String> a, List<String> b) {
+    return b.every((e) => a.contains(e));
   }
 }

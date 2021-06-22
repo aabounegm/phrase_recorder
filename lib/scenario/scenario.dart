@@ -9,7 +9,7 @@ class Scenario {
   Node get node => _node;
   bool get finished => node.outcome != null;
 
-  final state = <String, Set<String>>{};
+  final state = <String, List<String>>{};
 
   bool get ready {
     if (finished) return false;
@@ -24,7 +24,7 @@ class Scenario {
     _node = node;
     progress.add(node);
     if (node.state != null && state[node.state] == null) {
-      state[node.state!] = {};
+      state[node.state!] = [];
     }
   }
 

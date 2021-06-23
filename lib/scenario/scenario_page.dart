@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/scenario/exercises/order_exercise.dart';
 import 'exercises/choice_exercise.dart';
+import 'exercises/order_exercise.dart';
 import 'exercises/multichoice_exercise.dart';
 import 'exercises/option.dart';
 import 'node/node.dart';

@@ -21,7 +21,7 @@ class ChoiceExercise extends StatelessWidget {
           RadioListTile(
             title: Text(option.text),
             value: option.id,
-            groupValue: state.first,
+            groupValue: state.isEmpty ? null : state.first,
             onChanged: onChanged == null
                 ? null
                 : (_) {

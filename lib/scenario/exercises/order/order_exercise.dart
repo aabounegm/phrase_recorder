@@ -39,7 +39,7 @@ class _OrderExerciseState extends State<OrderExercise> {
   @override
   void initState() {
     super.initState();
-    current = shuffleList(widget.exercise.options);
+    current = shuffleList([...widget.exercise.options]);
   }
 
   @override

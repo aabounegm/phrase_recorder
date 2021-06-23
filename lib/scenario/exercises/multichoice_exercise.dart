@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../choice_exercise.dart';
+import 'option.dart';
 
-class ChoiceCard extends StatelessWidget {
-  final ChoiceExercise exercise;
+class MultichoiceExercise extends StatelessWidget {
+  final List<Option> options;
   final List<String> state;
   final Function()? onChanged;
 
-  const ChoiceCard(
-    this.exercise, {
+  const MultichoiceExercise(
+    this.options, {
     required this.state,
     this.onChanged,
   });
@@ -17,7 +17,7 @@ class ChoiceCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final option in exercise.options)
+        for (final option in options)
           CheckboxListTile(
             title: Text(option.text),
             value: state.contains(option.id),
@@ -25,9 +25,6 @@ class ChoiceCard extends StatelessWidget {
                 ? null
                 : (checked) {
                     if (checked == null) return;
-                    if (!exercise.multichoice) {
-                      state.clear();
-                    }
                     if (checked) {
                       state.add(option.id);
                     } else {

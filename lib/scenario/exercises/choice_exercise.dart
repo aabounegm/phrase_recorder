@@ -1,29 +1,37 @@
-import 'package:phrase_recorder/utils.dart';
+import 'package:flutter/material.dart';
+import 'option.dart';
 
-class ExerciseOption {
-  final String id;
-  final String text;
+class ChoiceExercise extends StatelessWidget {
+  final List<Option> options;
+  final List<String> state;
+  final Function()? onChanged;
 
-  ExerciseOption(this.id, this.text);
-}
-
-class ChoiceExercise {
-  final List<ExerciseOption> options;
-  final bool multichoice;
-
-  const ChoiceExercise({
-    required this.options,
-    this.multichoice = false,
+  const ChoiceExercise(
+    this.options, {
+    required this.state,
+    this.onChanged,
   });
 
   @override
-  ChoiceExercise.fromJSON(
-    Map<String, dynamic> json,
-  ) : this(
-          options: listFromJson<ExerciseOption>(
-            json['options'],
-            (o) => ExerciseOption(o['id'], o['text']),
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final option in options)
+          RadioListTile(
+            title: Text(option.text),
+            value: option.id,
+            groupValue: state.first,
+            onChanged: onChanged == null
+                ? null
+                : (_) {
+                    state
+                      ..clear()
+                      ..add(option.id);
+                    onChanged!();
+                  },
           ),
-          multichoice: json['multichoice'],
-        );
+      ],
+    );
+  }
 }

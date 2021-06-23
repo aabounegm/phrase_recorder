@@ -1,14 +1,14 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../choice_exercise.dart';
+import 'option.dart';
 
 class OrderExercise extends StatefulWidget {
-  final ChoiceExercise exercise;
+  final List<Option> options;
   final List<String> state;
   final Function()? onChanged;
 
   const OrderExercise(
-    this.exercise, {
+    this.options, {
     required this.state,
     this.onChanged,
   });
@@ -18,7 +18,7 @@ class OrderExercise extends StatefulWidget {
 }
 
 class _OrderExerciseState extends State<OrderExercise> {
-  late final List<ExerciseOption> current;
+  late final List<Option> current;
 
   List<T> shuffleList<T>(List<T> items) {
     var random = Random();
@@ -39,7 +39,7 @@ class _OrderExerciseState extends State<OrderExercise> {
   @override
   void initState() {
     super.initState();
-    current = shuffleList([...widget.exercise.options]);
+    current = shuffleList([...widget.options]);
   }
 
   @override

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/scenario/exercises/order/order_exercise.dart';
-import 'exercises/choice/choice_card.dart';
+import 'package:phrase_recorder/scenario/exercises/order_exercise.dart';
 import 'exercises/choice_exercise.dart';
+import 'exercises/multichoice_exercise.dart';
+import 'exercises/option.dart';
 import 'node/node.dart';
 import 'node/node_card.dart';
 import 'scenario.dart';
@@ -19,14 +20,11 @@ class _ScenarioPageState extends State<ScenarioPage> {
         text: 'You enter the shop.',
         question: 'What do you need to buy?',
         type: 'choice',
-        exercise: ChoiceExercise(
-          options: [
-            ExerciseOption('milk', 'Milk'),
-            ExerciseOption('bread', 'Bread'),
-            ExerciseOption('onion', 'Onion'),
-          ],
-          multichoice: true,
-        ),
+        exercise: [
+          Option('milk', 'Milk'),
+          Option('bread', 'Bread'),
+          Option('onion', 'Onion'),
+        ],
         state: 'product',
         transitions: [
           Transition(
@@ -83,7 +81,15 @@ class _ScenarioPageState extends State<ScenarioPage> {
                   ? null
                   : Builder(builder: (_) {
                       if (n.type == 'choice') {
-                        return ChoiceCard(
+                        return ChoiceExercise(
+                          n.exercise,
+                          state: scenario.state[n.state]!,
+                          onChanged:
+                              scenario.node == n ? () => setState(() {}) : null,
+                        );
+                      }
+                      if (n.type == 'multichoice') {
+                        return MultichoiceExercise(
                           n.exercise,
                           state: scenario.state[n.state]!,
                           onChanged:

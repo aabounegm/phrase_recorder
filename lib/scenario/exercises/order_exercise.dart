@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'option.dart';
 
 class OrderExercise extends StatefulWidget {
-  final List<Option> options;
+  final List<Option> exercise;
   final List<String> state;
   final Function()? onChanged;
 
   const OrderExercise(
-    this.options, {
+    this.exercise, {
     required this.state,
     this.onChanged,
   });
@@ -18,7 +18,7 @@ class OrderExercise extends StatefulWidget {
 }
 
 class _OrderExerciseState extends State<OrderExercise> {
-  late final List<Option> current;
+  late final List<Option> options;
 
   List<T> shuffleList<T>(List<T> items) {
     var random = Random();
@@ -39,7 +39,7 @@ class _OrderExerciseState extends State<OrderExercise> {
   @override
   void initState() {
     super.initState();
-    current = shuffleList([...widget.options]);
+    options = shuffleList([...widget.exercise]);
   }
 
   @override
@@ -54,16 +54,16 @@ class _OrderExerciseState extends State<OrderExercise> {
             if (oldIndex < newIndex) {
               newIndex -= 1;
             }
-            final item = current.removeAt(oldIndex);
-            current.insert(newIndex, item);
+            final item = options.removeAt(oldIndex);
+            options.insert(newIndex, item);
           });
           widget.state
             ..clear()
-            ..addAll(current.map((e) => e.id));
+            ..addAll(options.map((e) => e.id));
           widget.onChanged!();
         },
         children: [
-          for (final o in current)
+          for (final o in options)
             ListTile(
               key: Key(o.id),
               title: Text(o.text),

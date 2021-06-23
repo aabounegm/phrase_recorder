@@ -21,14 +21,14 @@ class _ScenarioPageState extends State<ScenarioPage> {
       'start': Node(
         text: 'You enter the shop.',
         question: 'What do you need to buy?',
-        // type: 'typing',
-        // exercise: 'I want to buy a pack of ### and a load of ###.',
-        type: 'choice',
-        exercise: [
-          Option('milk', 'A pack of milk.'),
-          Option('bread', 'A leaf of bread.'),
-          Option('onion', 'Two kilos of onion.'),
-        ],
+        type: 'typing',
+        exercise: 'I want to buy a pack of ### and a loaf of ###.',
+        // type: 'choice',
+        // exercise: [
+        //   Option('milk', 'A pack of milk.'),
+        //   Option('bread', 'A leaf of bread.'),
+        //   Option('onion', 'Two kilos of onion.'),
+        // ],
         state: 'product',
         transitions: [
           Transition(

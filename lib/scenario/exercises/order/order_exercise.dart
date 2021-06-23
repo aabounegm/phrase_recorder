@@ -18,7 +18,7 @@ class OrderExercise extends StatefulWidget {
 }
 
 class _OrderExerciseState extends State<OrderExercise> {
-  late final List<ChoiceOption> current;
+  late final List<ExerciseOption> current;
 
   List<T> shuffleList<T>(List<T> items) {
     var random = Random();

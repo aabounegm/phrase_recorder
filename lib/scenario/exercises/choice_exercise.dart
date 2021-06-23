@@ -1,14 +1,14 @@
 import 'package:phrase_recorder/utils.dart';
 
-class ChoiceOption {
+class ExerciseOption {
   final String id;
   final String text;
 
-  ChoiceOption(this.id, this.text);
+  ExerciseOption(this.id, this.text);
 }
 
 class ChoiceExercise {
-  final List<ChoiceOption> options;
+  final List<ExerciseOption> options;
   final bool multichoice;
 
   const ChoiceExercise({
@@ -20,9 +20,9 @@ class ChoiceExercise {
   ChoiceExercise.fromJSON(
     Map<String, dynamic> json,
   ) : this(
-          options: listFromJson<ChoiceOption>(
+          options: listFromJson<ExerciseOption>(
             json['options'],
-            (o) => ChoiceOption(o['id'], o['text']),
+            (o) => ExerciseOption(o['id'], o['text']),
           ),
           multichoice: json['multichoice'],
         );

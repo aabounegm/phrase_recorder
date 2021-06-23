@@ -21,9 +21,9 @@ class _ScenarioPageState extends State<ScenarioPage> {
         type: 'choice',
         exercise: ChoiceExercise(
           options: [
-            ChoiceOption('milk', 'Milk'),
-            ChoiceOption('bread', 'Bread'),
-            ChoiceOption('onion', 'Onion'),
+            ExerciseOption('milk', 'Milk'),
+            ExerciseOption('bread', 'Bread'),
+            ExerciseOption('onion', 'Onion'),
           ],
           multichoice: true,
         ),

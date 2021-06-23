@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phrase_recorder/scenario/exercises/typing_exercise.dart';
 import 'exercises/choice_exercise.dart';
 import 'exercises/order_exercise.dart';
 import 'exercises/multichoice_exercise.dart';
@@ -19,12 +20,8 @@ class _ScenarioPageState extends State<ScenarioPage> {
       'start': Node(
         text: 'You enter the shop.',
         question: 'What do you need to buy?',
-        type: 'choice',
-        exercise: [
-          Option('milk', 'Milk'),
-          Option('bread', 'Bread'),
-          Option('onion', 'Onion'),
-        ],
+        type: 'typing',
+        exercise: 'I want to buy a pack of ### and a load of ###.',
         state: 'product',
         transitions: [
           Transition(
@@ -90,6 +87,14 @@ class _ScenarioPageState extends State<ScenarioPage> {
                       }
                       if (n.type == 'multichoice') {
                         return MultichoiceExercise(
+                          n.exercise,
+                          state: scenario.state[n.state]!,
+                          onChanged:
+                              scenario.node == n ? () => setState(() {}) : null,
+                        );
+                      }
+                      if (n.type == 'typing') {
+                        return TypingExercise(
                           n.exercise,
                           state: scenario.state[n.state]!,
                           onChanged:

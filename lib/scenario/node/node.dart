@@ -1,3 +1,4 @@
+import 'package:phrase_recorder/scenario/exercises/option.dart';
 import 'package:phrase_recorder/scenario/transition.dart';
 import 'package:phrase_recorder/utils.dart';
 
@@ -20,10 +21,9 @@ class Node<T> {
     this.outcome,
   });
 
-  Node.fromJSON(
-    Map<String, dynamic> json, {
-    required T exercise,
-  }) : this(
+  Node.fromJson(
+    Map<String, dynamic> json,
+  ) : this(
           text: json['text'],
           question: json['question'],
           state: json['state'],
@@ -33,6 +33,37 @@ class Node<T> {
             json['transitions'],
             (t) => Transition.fromJSON(t),
           ),
-          exercise: exercise,
+          exercise: json['type'] == 'typing'
+              ? json['exercise']
+              : listFromJson(
+                  json['exercise'],
+                  (o) => Option.fromJson(o),
+                ),
         );
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['text'] = text;
+    if (question != null) {
+      data['question'] = question;
+    }
+    if (state != null) {
+      data['state'] = state;
+    }
+    if (type != null) {
+      data['type'] = type;
+    }
+    if (outcome != null) {
+      data['outcome'] = outcome;
+    }
+    if (transitions != null) {
+      data['transitions'] = transitions!.map((v) => v.toJson()).toList();
+    }
+    if (exercise != null) {
+      data['exercise'] = type == 'typing'
+          ? exercise
+          : (exercise as Iterable).map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }

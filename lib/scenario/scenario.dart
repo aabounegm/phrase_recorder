@@ -52,4 +52,25 @@ class Scenario {
     _score = score;
     _selectNode(nodes['start']!);
   }
+
+  Scenario.fromJson(
+    Map<String, dynamic> json,
+  ) : this(
+          (json['nodes']! as Map<String, dynamic>).map(
+            (key, value) => MapEntry(key, Node.fromJson(json)),
+          ),
+          score: json['score'],
+        );
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (score != 0) {
+      data['score'] = score;
+    }
+    data['nodes'] = {};
+    for (final n in nodes.entries) {
+      data['nodes'][n.key] = n.value.toJson();
+    }
+    return data;
+  }
 }

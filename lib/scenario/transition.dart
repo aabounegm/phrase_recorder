@@ -13,16 +13,6 @@ class Transition {
     this.value,
   });
 
-  Transition.fromJSON(
-    Map<String, dynamic> json,
-  ) : this(
-          json['target'],
-          score: json['score'],
-          check: json['check'],
-          filter: json['filter'],
-          value: json['value'],
-        );
-
   bool evaluate(Map<String, List<String>> state) {
     final set = state[check];
     if (set == null || value == null) return true;
@@ -49,5 +39,31 @@ class Transition {
 
   bool _contains(List<String> a, List<String> b) {
     return b.every((e) => a.contains(e));
+  }
+
+  Transition.fromJSON(
+    Map<String, dynamic> json,
+  ) : this(
+          json['target'],
+          score: json['score'],
+          check: json['check'],
+          filter: json['filter'],
+          value: json['value'],
+        );
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['target'] = target;
+    data['score'] = score;
+    if (check != null) {
+      data['check'] = check;
+    }
+    if (filter != 'equals') {
+      data['filter'] = filter;
+    }
+    if (value != null) {
+      data['value'] = value;
+    }
+    return data;
   }
 }

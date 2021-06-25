@@ -1,4 +1,5 @@
 import 'package:phrase_recorder/scenario/transition.dart';
+import 'package:phrase_recorder/utils.dart';
 import 'node/node.dart';
 
 class Scenario {
@@ -17,7 +18,7 @@ class Scenario {
     return state[node.state]?.isNotEmpty ?? false;
   }
 
-  final Map<String, Node> nodes;
+  final Map<String, Node> nodes = {};
   final List<Node> progress = [];
 
   void _selectNode(Node node) {
@@ -45,19 +46,23 @@ class Scenario {
     _selectNode(node);
   }
 
-  Scenario(
-    this.nodes, {
+  Scenario({
+    required Iterable<Node> nodes,
     score = 0,
   }) {
+    for (final n in nodes) {
+      this.nodes[n.id] = n;
+    }
     _score = score;
-    _selectNode(nodes['start']!);
+    _selectNode(this.nodes['start']!);
   }
 
   Scenario.fromJson(
     Map<String, dynamic> json,
   ) : this(
-          (json['nodes']! as Map<String, dynamic>).map(
-            (key, value) => MapEntry(key, Node.fromJson(json)),
+          nodes: listFromJson(
+            json['nodes'],
+            (n) => Node.fromJson(n),
           ),
           score: json['score'],
         );
@@ -67,10 +72,7 @@ class Scenario {
     if (score != 0) {
       data['score'] = score;
     }
-    data['nodes'] = {};
-    for (final n in nodes.entries) {
-      data['nodes'][n.key] = n.value.toJson();
-    }
+    data['nodes'] = nodes.values.map((n) => n.toJson()).toList();
     return data;
   }
 }

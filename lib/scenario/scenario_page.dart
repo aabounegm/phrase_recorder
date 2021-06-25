@@ -48,12 +48,81 @@ class _ScenarioPageState extends State<ScenarioPage> {
     );
   }
 
+  Future<void> deserializeScenario() async {
+    final textController = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text('Paste Scenario JSON below'),
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 8,
+              ),
+              child: TextField(
+                controller: textController,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 8,
+              ),
+              child: TextButton.icon(
+                  onPressed: Navigator.of(context).pop,
+                  icon: Icon(Icons.code_outlined),
+                  label: Text('Process Code')),
+            ),
+          ],
+        );
+      },
+    );
+
+    Scenario? scenario;
+    try {
+      scenario = Scenario.fromJson(
+        jsonDecode(textController.text),
+      );
+    } catch (e) {
+      scenario = null;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              scenario == null
+                  ? Icons.content_paste_off_outlined
+                  : Icons.content_paste_outlined,
+              color: Colors.white,
+            ),
+            SizedBox(width: 16),
+            Text(
+              scenario == null
+                  ? 'Error during JSON parsing.'
+                  : 'Succesfully loaded Scenario.',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Exercises'),
         actions: [
+          IconButton(
+            onPressed: deserializeScenario,
+            icon: Icon(Icons.content_paste_outlined),
+            tooltip: 'Load Scenario from JSON',
+          ),
           IconButton(
             onPressed: serializeScenario,
             icon: Icon(Icons.content_copy_outlined),

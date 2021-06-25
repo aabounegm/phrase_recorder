@@ -41,7 +41,7 @@ class Transition {
     return b.every((e) => a.contains(e));
   }
 
-  Transition.fromJSON(
+  Transition.fromJson(
     Map<String, dynamic> json,
   ) : this(
           json['target'],

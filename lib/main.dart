@@ -14,8 +14,9 @@ void main() {
 class PhrasesApp extends StatelessWidget {
   final Future initializer = Firebase.initializeApp();
   final scenario = Scenario(
-    {
-      'start': Node(
+    nodes: [
+      Node(
+        id: 'start',
         text: 'You enter the shop.',
         question: 'What do you need to buy?',
         type: 'typing',
@@ -44,23 +45,27 @@ class PhrasesApp extends StatelessWidget {
           Transition('miss'),
         ],
       ),
-      'win': Node(
+      Node(
+        id: 'win',
         text: 'Nice.',
         outcome: 'win',
       ),
-      'partial': Node(
+      Node(
+        id: 'partial',
         text: "You missed something, but it's okay.",
         outcome: 'win',
       ),
-      'miss': Node(
+      Node(
+        id: 'miss',
         text: 'You missed something.',
         outcome: 'loss',
       ),
-      'loss': Node(
+      Node(
+        id: 'loss',
         text: 'Wrong answer.',
         outcome: 'loss',
       ),
-    },
+    ],
     score: 1,
   );
 

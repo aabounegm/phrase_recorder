@@ -3,6 +3,7 @@ import 'package:phrase_recorder/scenario/transition.dart';
 import 'package:phrase_recorder/utils.dart';
 
 class Node<T> {
+  final String id;
   final String text;
   final String? question;
   final String? state;
@@ -12,6 +13,7 @@ class Node<T> {
   final List<Transition>? transitions;
 
   Node({
+    required this.id,
     required this.text,
     this.question,
     this.state,
@@ -24,6 +26,7 @@ class Node<T> {
   Node.fromJson(
     Map<String, dynamic> json,
   ) : this(
+          id: json['id'],
           text: json['text'],
           question: json['question'],
           state: json['state'],
@@ -31,7 +34,7 @@ class Node<T> {
           outcome: json['outcome'],
           transitions: listFromJson(
             json['transitions'],
-            (t) => Transition.fromJSON(t),
+            (t) => Transition.fromJson(t),
           ),
           exercise: json['type'] == 'typing'
               ? json['exercise']
@@ -44,6 +47,7 @@ class Node<T> {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['text'] = text;
+    data['id'] = id;
     if (question != null) {
       data['question'] = question;
     }

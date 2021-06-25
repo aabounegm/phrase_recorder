@@ -47,7 +47,7 @@ class Transition {
           json['target'],
           score: json['score'],
           check: json['check'],
-          filter: json['filter'],
+          filter: json['filter'] ?? 'equals',
           value: json['value'],
         );
 

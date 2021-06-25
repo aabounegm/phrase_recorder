@@ -95,28 +95,24 @@ class _ScenarioPageState extends State<ScenarioPage> {
     } catch (e) {
       scenario = null;
     }
-    if (scenario != null) await reload(scenario);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              scenario == null
-                  ? Icons.content_paste_off_outlined
-                  : Icons.content_paste_outlined,
-              color: Colors.white,
-            ),
-            SizedBox(width: 16),
-            Text(
-              scenario == null
-                  ? 'Error during JSON parsing.'
-                  : 'Succesfully loaded Scenario.',
-            ),
-          ],
+    if (scenario == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(
+                Icons.content_paste_off_outlined,
+                color: Colors.white,
+              ),
+              SizedBox(width: 16),
+              Text('Error during JSON parsing.'),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      await reload(scenario);
+    }
   }
 
   @override

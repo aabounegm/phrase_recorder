@@ -27,53 +27,24 @@ class _ScenarioPageState extends State<ScenarioPage> {
   }
 
   Future<void> serializeScenario() async {
-    final textController = TextEditingController();
-    textController.text = jsonEncode(scenario.toJson());
-
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: const Text('Select assignment'),
+    await Clipboard.setData(
+      ClipboardData(
+        text: jsonEncode(scenario.toJson()),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 8,
-              ),
-              child: TextField(
-                controller: textController,
-                readOnly: true,
-                maxLines: null,
-                decoration: InputDecoration.collapsed(
-                  hintText: '',
-                ),
-              ),
+            Icon(
+              Icons.content_copy_outlined,
+              color: Colors.white,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Clipboard.setData(
-                        ClipboardData(text: textController.text),
-                      );
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.content_copy_outlined),
-                    label: Text('COPY TO CLIPBOARD'),
-                  ),
-                ],
-              ),
-            ),
+            SizedBox(width: 16),
+            Text('Copied Scenario JSON to clipboard.'),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -85,7 +56,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
         actions: [
           IconButton(
             onPressed: serializeScenario,
-            icon: Icon(Icons.code_outlined),
+            icon: Icon(Icons.content_copy_outlined),
             tooltip: 'Scenario to JSON',
           ),
           SizedBox(width: 4),

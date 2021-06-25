@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/scenario/scenario_page.dart';
 
+import 'scenario/exercises/option.dart';
 import 'scenario/node/node.dart';
 import 'scenario/scenario.dart';
 import 'scenario/transition.dart';
@@ -19,14 +20,14 @@ class PhrasesApp extends StatelessWidget {
         id: 'start',
         text: 'You enter the shop.',
         question: 'What do you need to buy?',
-        type: 'typing',
-        exercise: 'I want to buy a pack of ### and a loaf of ###.',
-        // type: 'choice',
-        // exercise: [
-        //   Option('milk', 'A pack of milk.'),
-        //   Option('bread', 'A leaf of bread.'),
-        //   Option('onion', 'Two kilos of onion.'),
-        // ],
+        // type: 'typing',
+        // exercise: 'I want to buy a pack of ### and a loaf of ###.',
+        type: 'choice',
+        exercise: [
+          Option('milk', 'A pack of milk.'),
+          Option('bread', 'A leaf of bread.'),
+          Option('onion', 'Two kilos of onion.'),
+        ],
         state: 'product',
         transitions: [
           Transition(

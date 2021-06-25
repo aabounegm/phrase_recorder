@@ -15,10 +15,16 @@ class ScenarioPage extends StatefulWidget {
 }
 
 class _ScenarioPageState extends State<ScenarioPage> {
-  Scenario get scenario => widget.scenario;
+  late final Scenario scenario;
 
-  void reload(scenario) {
-    Navigator.pushReplacement(
+  @override
+  void initState() {
+    super.initState();
+    scenario = Scenario.fromJson(widget.scenario.toJson());
+  }
+
+  Future<void> reload(scenario) async {
+    await Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => ScenarioPage(scenario),
@@ -89,6 +95,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
     } catch (e) {
       scenario = null;
     }
+    if (scenario != null) await reload(scenario);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -139,7 +146,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
               onDone: scenario.node == n && scenario.ready
                   ? () => setState(() => scenario.moveNext())
                   : null,
-              child: n.exercise == null
+              child: n.exercise == null || n.state == null
                   ? null
                   : buildExercise(
                       type: n.type,
@@ -160,7 +167,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: ElevatedButton.icon(
-                onPressed: () => reload(scenario),
+                onPressed: () => reload(widget.scenario),
                 icon: Icon(Icons.restart_alt_outlined),
                 label: Text('Restart'),
               ),

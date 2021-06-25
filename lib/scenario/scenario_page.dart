@@ -1,71 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/scenario/exercises/exercise_builder.dart';
-import 'package:phrase_recorder/scenario/exercises/typing_exercise.dart';
-import 'exercises/choice_exercise.dart';
-import 'exercises/order_exercise.dart';
-import 'exercises/multichoice_exercise.dart';
-import 'exercises/option.dart';
-import 'node/node.dart';
 import 'node/node_card.dart';
 import 'scenario.dart';
-import 'transition.dart';
 
 class ScenarioPage extends StatefulWidget {
+  final Scenario scenario;
+
+  ScenarioPage(this.scenario);
+
   @override
   _ScenarioPageState createState() => _ScenarioPageState();
 }
 
 class _ScenarioPageState extends State<ScenarioPage> {
-  final scenario = Scenario(
-    {
-      'start': Node(
-        text: 'You enter the shop.',
-        question: 'What do you need to buy?',
-        type: 'typing',
-        exercise: 'I want to buy a pack of ### and a loaf of ###.',
-        // type: 'choice',
-        // exercise: [
-        //   Option('milk', 'A pack of milk.'),
-        //   Option('bread', 'A leaf of bread.'),
-        //   Option('onion', 'Two kilos of onion.'),
-        // ],
-        state: 'product',
-        transitions: [
-          Transition(
-            'win',
-            check: 'product',
-            value: 'milk,bread',
-          ),
-          Transition(
-            'partial',
-            check: 'product',
-            filter: 'contains',
-            value: 'bread',
-            score: -1,
-          ),
-          Transition('loss', check: 'product', value: 'onion'),
-          Transition('miss'),
-        ],
+  Scenario get scenario => widget.scenario;
+
+  void reload(scenario) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ScenarioPage(scenario),
       ),
-      'win': Node(
-        text: 'Nice.',
-        outcome: 'win',
-      ),
-      'partial': Node(
-        text: "You missed something, but it's okay.",
-        outcome: 'win',
-      ),
-      'miss': Node(
-        text: 'You missed something.',
-        outcome: 'loss',
-      ),
-      'loss': Node(
-        text: 'Wrong answer.',
-        outcome: 'loss',
-      ),
-    },
-    score: 1,
-  );
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,12 +59,7 @@ class _ScenarioPageState extends State<ScenarioPage> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: ElevatedButton.icon(
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ScenarioPage(),
-                  ),
-                ),
+                onPressed: () => reload(scenario),
                 icon: Icon(Icons.restart_alt_outlined),
                 label: Text('Restart'),
               ),

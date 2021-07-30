@@ -1,9 +1,68 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:phrase_recorder/scenario/exercises/exercise_builder.dart';
+import 'package:phrase_recorder/scenario/transition.dart';
+import 'exercises/option.dart';
+import 'node/node.dart';
 import 'node/node_card.dart';
 import 'scenario.dart';
 import 'package:flutter/services.dart';
+
+final defaultScenario = Scenario(
+  nodes: [
+    Node(
+      id: 'start',
+      text: 'You enter the shop.',
+      question: 'What do you need to buy?',
+      // type: 'typing',
+      // exercise: 'I want to buy a pack of ### and a loaf of ###.',
+      type: 'choice',
+      exercise: [
+        Option('milk', 'A pack of milk.'),
+        Option('bread', 'A leaf of bread.'),
+        Option('onion', 'Two kilos of onion.'),
+      ],
+      state: 'product',
+      transitions: [
+        Transition(
+          'win',
+          check: 'product',
+          value: 'milk,bread',
+        ),
+        Transition(
+          'partial',
+          check: 'product',
+          filter: 'contains',
+          value: 'bread',
+          score: -1,
+        ),
+        Transition('loss', check: 'product', value: 'onion'),
+        Transition('miss'),
+      ],
+    ),
+    Node(
+      id: 'win',
+      text: 'Nice.',
+      outcome: 'win',
+    ),
+    Node(
+      id: 'partial',
+      text: "You missed something, but it's okay.",
+      outcome: 'win',
+    ),
+    Node(
+      id: 'miss',
+      text: 'You missed something.',
+      outcome: 'loss',
+    ),
+    Node(
+      id: 'loss',
+      text: 'Wrong answer.',
+      outcome: 'loss',
+    ),
+  ],
+  score: 1,
+);
 
 class ScenarioPage extends StatefulWidget {
   final Scenario scenario;

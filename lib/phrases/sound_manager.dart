@@ -35,10 +35,7 @@ class SoundManager {
   }) async {
     recording ??= !recorder.isRecording;
     if (recording) {
-      await recorder.startRecorder(
-        toFile: file,
-        codec: Codec.mp3,
-      );
+      await recorder.startRecorder(toFile: file);
     } else {
       await recorder.stopRecorder();
     }

@@ -17,7 +17,7 @@ class Phrase {
     required this.index,
     required String root,
   }) {
-    file = File('$root/$id.mp3');
+    file = File('$root/$id.aac');
     checkIfExists();
   }
 

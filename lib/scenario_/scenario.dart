@@ -1,33 +1,22 @@
+import 'content_meta_data.dart';
 import 'scenario_node.dart';
-
-enum ContentStatus { public, unlisted, private }
-
-class ScenarioTranslation {
-  String? textSetId;
-  String? audioSetId;
-  ScenarioTranslation({
-    this.textSetId,
-    this.audioSetId,
-  });
-}
+import 'scenario_translation_set.dart';
 
 class Scenario {
+  ContentMetaData metaData;
   String title;
   String? description;
   int likes;
-  ContentStatus status;
-  String authorId;
   List<ScenarioNode> nodes;
   String startNodeId;
   Map<String, ScenarioTranslation>? translations;
 
   Scenario({
+    required this.metaData,
     required this.title,
     this.translations,
     this.description,
     this.likes = 0,
-    this.status = ContentStatus.private,
-    required this.authorId,
     required this.startNodeId,
     required this.nodes,
   });

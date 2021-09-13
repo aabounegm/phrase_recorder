@@ -2,12 +2,12 @@ enum ScenarioEnding { win, loss }
 
 class NodeChoice {
   String id;
-  String text;
+  String note;
   String targetNodeId;
 
   NodeChoice({
     required this.id,
-    required this.text,
+    required this.note,
     required this.targetNodeId,
   });
 }

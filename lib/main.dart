@@ -19,10 +19,11 @@ class PhrasesApp extends StatelessWidget {
           title: 'Phrases App',
           theme: ThemeData(
             primaryColor: Colors.white,
-            accentColor: Colors.grey,
             cardTheme: CardTheme(
               clipBehavior: Clip.antiAlias,
             ),
+            colorScheme:
+                ColorScheme.fromSwatch().copyWith(secondary: Colors.grey),
           ),
           home: ChapterListScreen(),
         );

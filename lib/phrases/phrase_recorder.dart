@@ -34,7 +34,9 @@ class _PhraseRecorderState extends State<PhraseRecorder> {
       widget.onUpdate();
       if (widget.autoPlay) {
         await setPlaying(true, autoNext: widget.autoNext);
-      } else if (widget.autoNext) widget.moveNext?.call();
+      } else if (widget.autoNext) {
+        widget.moveNext?.call();
+      }
     }
   }
 

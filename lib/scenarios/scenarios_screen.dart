@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:phrase_recorder/scenario/scenario.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import 'data/scenario.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ScenariosScreen extends StatefulWidget {
   const ScenariosScreen();

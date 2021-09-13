@@ -24,7 +24,8 @@ class _ScenariosScreenState extends State<ScenariosScreen> {
               Scenario.fromJson(snapshot.data()!, id: snapshot.id),
           toFirestore: (Scenario object, _) => object.toJson(),
         )
-        .get();
+        .get()
+        .then((data) => data.docs.map((d) => d.data()).toList());
     _refreshController.refreshCompleted();
   }
 
@@ -43,33 +44,31 @@ class _ScenariosScreenState extends State<ScenariosScreen> {
               ),
               controller: _refreshController,
               onRefresh: _refreshScenarios,
-              // onLoading: _onLoading,
-              // child: ListView(
-              //   children: [
-              //     if (chapters.isEmpty && !_refreshController.isRefresh)
-              //       Center(child: Text('No chapters yet')),
-              //     for (final c in chapters)
-              //       ListTile(
-              //         title: Text(
-              //           c.title,
-              //           style: TextStyle(
-              //             fontSize: 18,
-              //             fontWeight: FontWeight.bold,
-              //           ),
-              //         ),
-              //         subtitle: c.subtitle == null ? null : Text(c.subtitle!),
-              //         trailing: Text('${c.recorded} / ${c.phrases.length}'),
-              //         // onTap: () => Navigator.push(
-              //         //   context,
-              //         //   MaterialPageRoute(
-              //         //     builder: (context) => PhraseListScreen(
-              //         //       chapter: c,
-              //         //     ),
-              //         //   ),
-              //         // ),
-              //       )
-              //   ],
-              // ),
+              child: ListView(
+                children: [
+                  for (final scenario in _scenarios)
+                    ListTile(
+                      title: Text(
+                        scenario.title,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: scenario.description == null
+                          ? null
+                          : Text(scenario.description!),
+                      // onTap: () => Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => PhraseListScreen(
+                      //       chapter: c,
+                      //     ),
+                      //   ),
+                      // ),
+                    )
+                ],
+              ),
             ),
           ),
         ],

@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path_provider/path_provider.dart';
 import 'phrases/phrase.dart';
 import 'chapters/chapter.dart';
 
 List<Chapter> chapters = [];
 Directory? root;
+User? user;
 
 Future<void> loadChapters() async {
   root ??= await getApplicationDocumentsDirectory().then(
@@ -52,4 +54,8 @@ Future<void> loadPhrases(Chapter chapter) async {
       ..addAll(d.docs.map((p) => p.data()))
       ..sort((a, b) => a.index.compareTo(b.index));
   });
+}
+
+void setUser(User? u) {
+  user = u;
 }

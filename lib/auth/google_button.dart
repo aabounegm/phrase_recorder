@@ -37,12 +37,12 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 final googleUser = await GoogleSignIn().signIn();
 
                 // Obtain the auth details from the request
-                final googleAuth = await googleUser.authentication;
+                final googleAuth = await googleUser?.authentication;
 
                 // Create a new credential
                 final credential = GoogleAuthProvider.credential(
-                  accessToken: googleAuth.accessToken,
-                  idToken: googleAuth.idToken,
+                  accessToken: googleAuth?.accessToken,
+                  idToken: googleAuth?.idToken,
                 );
 
                 // Once signed in, return the UserCredential
